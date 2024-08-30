@@ -26,6 +26,12 @@ libc.a: $(OBJA) $(OBJC)
 	@OBJA_FILTERED=$(OBJA_FILTERED:.asm=.o)
 	@$(AR) rvs libc.a $(OBJA_FILTERED) $(OBJC)
 
+install: libc.a
+	@echo "lucerna: install binaries in ../toolchain-x86_64/cross/x86_64-lux/lib/"
+	@cp libc.a ../toolchain-x86_64/cross/x86_64-lux/lib/
+	@cp crt0.o ../toolchain-x86_64/cross/x86_64-lux/lib/
+	@echo "lucerna: install headers in ../toolchain-x86_64/cross/lib/gcc/x86_64-lux/14.2.0/include/"
+
 clean:
 	@rm -f libc.a crt0.o $(OBJA) $(OBJC)
 
