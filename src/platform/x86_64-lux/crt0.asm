@@ -15,13 +15,17 @@ section .text
 ; exit() with the return value from main
 
 global _start
+align 16
 _start:
-    ; TODO: actually implement the functionality mentioned above
-    
-    extern main
-    call main
+    mov rdx, rsi    ; rdx = env
+    mov rsi, rdi    ; rsi = argv
+    xor rdi, rdi    ; TODO: rdi = argc
 
-    ; TODO: implement this syscall in the kernel too
-    mov rdi, rax        ; return value from main()
-    xor rax, rax        ; exit()
-    syscall
+    extern main     ; int main(int argc, char **argv, char **env)
+    call main       ; the env is obviously optional and probably should not be assumed to exist
+
+    mov rdi, rax    ; return value from main()
+    xor rax, rax
+    syscall         ; exit()
+
+    jmp $           ; this is unreachable but just in case
