@@ -16,29 +16,41 @@ void exit(int status) {
     luxSyscall(SYSCALL_EXIT, status, 0, 0, 0);
 }
 
-pid_t fork() {
+void _exit(int status) {
+    exit(status);
+}
+
+pid_t fork(void) {
     return (pid_t) luxSyscall(SYSCALL_FORK, 0, 0, 0, 0);
 }
 
-int yield() {
+pid_t vfork(void) {
+    return fork();
+}
+
+int yield(void) {
     return (int) luxSyscall(SYSCALL_YIELD, 0, 0, 0, 0);
+}
+
+int sched_yield(void) {
+    return yield();
 }
 
 // TODO: waitpid(), execve(), execrdv()
 
-pid_t getpid() {
+pid_t getpid(void) {
     return (pid_t) luxSyscall(SYSCALL_GETPID, 0, 0, 0, 0);
 }
 
-pid_t gettid() {
+pid_t gettid(void) {
     return (pid_t) luxSyscall(SYSCALL_GETTID, 0, 0, 0, 0);
 }
 
-uid_t getuid() {
+uid_t getuid(void) {
     return (uid_t) luxSyscall(SYSCALL_GETUID, 0, 0, 0, 0);
 }
 
-gid_t getgid() {
+gid_t getgid(void) {
     return (gid_t) luxSyscall(SYSCALL_GETGID, 0, 0, 0, 0);
 }
 
