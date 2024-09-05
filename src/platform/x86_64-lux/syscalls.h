@@ -9,7 +9,9 @@
 
 // lux microkernel system call indexes
 
-/* Group 1: Process, Threads, and Users */
+#include <stdint.h>
+
+/* Group 1: Processes, Threads, and Users */
 
 #define SYSCALL_EXIT            0
 #define SYSCALL_FORK            1
@@ -25,3 +27,4 @@
 #define SYSCALL_SETGID          11
 #define SYSCALL_MSLEEP          12
 
+uint64_t luxSyscall(uint64_t request, uint64_t p0, uint64_t p1, uint64_t p2, uint64_t p3);
