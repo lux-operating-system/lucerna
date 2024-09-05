@@ -21,7 +21,7 @@ all: libc.a
 	@$(AS) $(ASFLAGS) -o $@ $<
 
 libc.a: $(OBJA) $(OBJC)
-	@cp ./src/platform/$(PLATFORM)/crt0.o .
+	@cp ./src/platform/$(PLATFORM)/stubs/crt0.o .
 	@echo "\x1B[0;1;34m [  AR   ]\x1B[0m libc.a"
 	@OBJA_FILTERED=$(shell find ./src -type f -name "*.asm" ! -name "*crt*")
 	@OBJA_FILTERED=$(OBJA_FILTERED:.asm=.o)
