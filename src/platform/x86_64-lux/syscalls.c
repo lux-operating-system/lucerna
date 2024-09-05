@@ -28,12 +28,8 @@ pid_t vfork(void) {
     return fork();
 }
 
-int yield(void) {
-    return (int) luxSyscall(SYSCALL_YIELD, 0, 0, 0, 0);
-}
-
 int sched_yield(void) {
-    return yield();
+    return (int) luxSyscall(SYSCALL_YIELD, 0, 0, 0, 0);
 }
 
 // TODO: waitpid(), execve(), execrdv()
