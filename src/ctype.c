@@ -64,7 +64,7 @@ int isblank(int ch) {
 }
 
 int isprint(int ch) {
-    return isgraph(ch);
+    return isgraph(ch) | isblank(ch);
 }
 
 int ispunct(int ch) {
