@@ -71,7 +71,7 @@ int socket(int domain, int type, int protocol) {
 }
 
 int connect(int sd, const struct sockaddr *addr, socklen_t len) {
-    int status = (int)luxSyscall(SYSCALL_SOCKET, sd, (uint64_t)addr, len, 0);
+    int status = (int)luxSyscall(SYSCALL_CONNECT, sd, (uint64_t)addr, len, 0);
     if(status < 0) {
         errno = -1*status;
         return -1;
