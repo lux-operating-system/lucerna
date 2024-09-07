@@ -109,3 +109,23 @@ int accept(int sd, struct sockaddr *addr, socklen_t *len) {
         return status;
     }
 }
+
+ssize_t recv(int sd, void *buffer, size_t len, int flags) {
+    ssize_t status = (ssize_t)luxSyscall(SYSCALL_RECV, sd, (uint64_t)buffer, len, flags);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    } else {
+        return status;
+    }
+}
+
+ssize_t send(int sd, const void *buffer, size_t len, int flags) {
+    ssize_t status = (ssize_t)luxSyscall(SYSCALL_SEND, sd, (uint64_t)buffer, len, flags);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    } else {
+        return status;
+    }
+}
