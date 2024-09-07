@@ -7,7 +7,9 @@
 
 /* these functions must be defined for every platform lucerna is to be ported to */
 
+#include <errno.h>
 #include <sys/types.h>
+#include <sys/socket.h>
 #include "syscalls.h"
 
 /* Group 1: Processes, Threads, and Users */
@@ -54,4 +56,56 @@ gid_t getgid(void) {
 
 unsigned long msleep(unsigned long msec) {
     return (unsigned long) luxSyscall(SYSCALL_MSLEEP, msec, 0, 0, 0);
+}
+
+/* Group 3: Interprocess Communication */
+
+int socket(int domain, int type, int protocol) {
+    int status = (int)luxSyscall(SYSCALL_SOCKET, domain, type, protocol, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    } else {
+        return status;
+    }
+}
+
+int connect(int sd, const struct sockaddr *addr, socklen_t len) {
+    int status = (int)luxSyscall(SYSCALL_SOCKET, sd, (uint64_t)addr, len, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    } else {
+        return status;
+    }
+}
+
+int bind(int sd, const struct sockaddr *addr, socklen_t len) {
+    int status = (int)luxSyscall(SYSCALL_BIND, sd, (uint64_t)addr, len, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    } else {
+        return status;
+    }
+}
+
+int listen(int sd, int backlog) {
+    int status = (int)luxSyscall(SYSCALL_LISTEN, sd, backlog, 0, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    } else {
+        return status;
+    }
+}
+
+int accept(int sd, struct sockaddr *addr, socklen_t *len) {
+    int status = (int)luxSyscall(SYSCALL_ACCEPT, sd, (uint64_t)addr, (uint64_t)len, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    } else {
+        return status;
+    }
 }
