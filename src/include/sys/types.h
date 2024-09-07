@@ -22,6 +22,7 @@ typedef int64_t off_t;
 typedef uint64_t time_t;
 typedef uint16_t blksize_t;
 typedef int64_t blkcnt_t;
+typedef int64_t ssize_t;
 typedef uint64_t clock_t;
 typedef int16_t clockid_t;
 typedef uint64_t fsblkcnt_t;
