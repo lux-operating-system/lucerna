@@ -19,3 +19,4 @@ pid_t getpid(void);
 pid_t gettid(void);
 uid_t getuid(void);
 uid_t getgid(void);
+void *sbrk(intptr_t);
