@@ -57,5 +57,14 @@
 #define SYSCALL_ACCEPT          35
 #define SYSCALL_RECV            36
 #define SYSCALL_SEND            37
+#define SYSCALL_KILL            38
+
+/* Group 4: Memory Management */
+
+#define SYSCALL_SBRK            39
+#define SYSCALL_MMAP            40
+#define SYSCALL_MUNMAP          41
+#define SYSCALL_MLOCK           42
+#define SYSCALL_MUNLOCK         43
 
 uint64_t luxSyscall(uint64_t request, uint64_t p0, uint64_t p1, uint64_t p2, uint64_t p3);

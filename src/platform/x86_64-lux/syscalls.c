@@ -133,3 +133,11 @@ ssize_t send(int sd, const void *buffer, size_t len, int flags) {
         return status;
     }
 }
+
+// TODO: kill()
+
+/* Group 4: Memory Management */
+
+void *sbrk(intptr_t delta) {
+    return (void *)luxSyscall(SYSCALL_SBRK, (uint64_t)delta, 0, 0, 0);
+}
