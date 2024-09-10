@@ -34,7 +34,11 @@ int sched_yield(void) {
     return (int) luxSyscall(SYSCALL_YIELD, 0, 0, 0, 0);
 }
 
-// TODO: waitpid(), execve(), execrdv()
+// TODO: waitpid(), execve()
+
+int execrdv(const char *name, const char **argv) {
+    return (int) luxSyscall(SYSCALL_EXECRDV, (uint64_t)name, (uint64_t)argv, 0, 0);
+}
 
 pid_t getpid(void) {
     return (pid_t) luxSyscall(SYSCALL_GETPID, 0, 0, 0, 0);
