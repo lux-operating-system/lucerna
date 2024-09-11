@@ -62,6 +62,12 @@ unsigned long msleep(unsigned long msec) {
     return (unsigned long) luxSyscall(SYSCALL_MSLEEP, msec, 0, 0, 0);
 }
 
+/* Group 2: File System Manipulation */
+
+int mount(const char *src, const char *tgt, const char *type, int flags, void *data) {
+    return (int) luxSyscall(SYSCALL_MOUNT, (uint64_t)src, (uint64_t)tgt, (uint64_t)type, flags);
+}
+
 /* Group 3: Interprocess Communication */
 
 int socket(int domain, int type, int protocol) {
