@@ -29,62 +29,15 @@ void *malloc(size_t n) {
     if(!n) return NULL;
     struct mallocHeader *hdr;
 
-    if(!heapStart || heapStart == (void *)-1) {
-        heapStart = sbrk(BRK_INCREMENTS);
-        if(heapStart == (void *)-1) return NULL;
-        heapSize = BRK_INCREMENTS;
-        heapEnd = heapStart + heapSize;
+    n = roundToBrkIncrement(n);
+    void *brk = sbrk(n + sizeof(struct mallocHeader));
+    if(!brk || brk == (void *)-1) return NULL;
 
-        hdr = heapStart;
-        hdr->next = 0;
-        hdr->valid = 0;
-    }
+    hdr = brk;
+    hdr->valid = 1;
+    hdr->next = n;
 
-    // possibly allocate more memory
-    if(n > heapSize || n > BRK_INCREMENTS) {
-        size_t inc = roundToBrkIncrement(n);
-        void *brk = sbrk(inc);
-        if(brk == (void *)-1) return NULL;
-
-        heapSize += inc;
-        heapEnd = heapStart + heapSize;
-
-        hdr = brk;
-        hdr->next = 0;
-        hdr->valid = 0;
-    }
-
-    // iterate through the list and look for a block that's large enough
-    size_t position = 0;
-    hdr = heapStart;
-    while(position < heapSize) {
-        if(hdr->valid) {
-            position += hdr->next;
-            hdr = (struct mallocHeader *)((uintptr_t)hdr + hdr->next);
-        } else {
-            // free block
-            size_t size;
-            if(!hdr->next) size = heapSize - position - sizeof(struct mallocHeader);
-            else size = hdr->next - sizeof(struct mallocHeader);
-
-            if(size >= n) {
-                // appropriate size
-                hdr->next = n + sizeof(struct mallocHeader);
-                hdr->valid = 1;
-
-                void *ptr = (void *)(uintptr_t)hdr + sizeof(struct mallocHeader);
-
-                hdr = (struct mallocHeader *)((uintptr_t)hdr + hdr->next);
-                if(!hdr->valid) hdr->next = 0;
-
-                return ptr;
-            }
-
-            position += size + sizeof(struct mallocHeader);
-        }
-    }
-
-    return NULL;
+    return (void *)((uintptr_t)brk + sizeof(struct mallocHeader));
 }
 
 void free(void *ptr) {
