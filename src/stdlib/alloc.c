@@ -29,8 +29,8 @@ void *malloc(size_t n) {
     if(!n) return NULL;
     struct mallocHeader *hdr;
 
-    n = roundToBrkIncrement(n);
-    void *brk = sbrk(n + sizeof(struct mallocHeader));
+    size_t nextBrk = roundToBrkIncrement(n + sizeof(struct mallocHeader) + 4096);
+    void *brk = sbrk(nextBrk);
     if(!brk || brk == (void *)-1) return NULL;
 
     hdr = brk;
