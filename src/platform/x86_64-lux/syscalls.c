@@ -10,6 +10,7 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/stat.h>
 #include "syscalls.h"
 
 /* Group 1: Processes, Threads, and Users */
