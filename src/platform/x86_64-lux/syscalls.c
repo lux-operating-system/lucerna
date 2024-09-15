@@ -64,8 +64,24 @@ unsigned long msleep(unsigned long msec) {
 
 /* Group 2: File System Manipulation */
 
+int stat(const char *path, struct stat *buf) {
+    int status = (int) luxSyscall(SYSCALL_STAT, (uint64_t)path, (uint64_t)buf, 0, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    }
+
+    return status;
+}
+
 int mount(const char *src, const char *tgt, const char *type, int flags, void *data) {
-    return (int) luxSyscall(SYSCALL_MOUNT, (uint64_t)src, (uint64_t)tgt, (uint64_t)type, flags);
+    int status = (int) luxSyscall(SYSCALL_MOUNT, (uint64_t)src, (uint64_t)tgt, (uint64_t)type, flags);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    }
+
+    return status;
 }
 
 /* Group 3: Interprocess Communication */
