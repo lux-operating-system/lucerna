@@ -108,11 +108,11 @@ int ispunct(int ch) {
 }
 
 int tolower(int ch) {
-    if(ch >= 'A' && ch <= 'Z') return ch+32;
+    if((ch >= 'A') && (ch <= 'Z')) return ch+32;
     else return ch;
 }
 
 int toupper(int ch) {
-    if(ch >= 'a' & ch <= 'z') return ch-32;
+    if((ch >= 'a') && (ch <= 'z')) return ch-32;
     else return ch;
 }
