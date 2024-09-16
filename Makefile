@@ -31,7 +31,7 @@ install: libc.a
 	@echo "\x1B[0;1;35m cp  \x1B[0m $(ROOT)/lib"
 	@cp libc.a $(ROOT)/lib/
 	@cp crt0.o $(ROOT)/lib/
-	@echo "\x1B[0;1;35m cp  \x1B[0m (ROOT)/x86_64-lux/lib"
+	@echo "\x1B[0;1;35m cp  \x1B[0m $(ROOT)/x86_64-lux/lib"
 	@cp libc.a $(ROOT)/lib/
 	@cp crt0.o $(ROOT)/lib/
 	@echo "\x1B[0;1;35m cp  \x1B[0m $(ROOT)/lib/gcc/x86_64-lux/14.2.0/"
