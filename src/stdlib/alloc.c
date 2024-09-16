@@ -17,9 +17,6 @@ struct mallocHeader {
     int valid;
 };
 
-static void *heapStart = NULL, *heapEnd = NULL;
-static size_t heapSize = 0;
-
 static size_t roundToBrkIncrement(size_t n) {
     while(n % BRK_INCREMENTS) n++;
     return n;
