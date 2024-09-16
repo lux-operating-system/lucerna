@@ -19,12 +19,12 @@ all: libc.a
 	@$(CC) $(CCFLAGS) -o $@ $<
 
 %.o: %.asm
-	@echo "\x1B[0;1;32m as  \x1B[0m $<"
+	@echo "\x1B[0;1;36m as  \x1B[0m $<"
 	@$(AS) $(ASFLAGS) -o $@ $<
 
 libc.a: $(OBJA) $(OBJC)
 	@cp ./src/platform/$(PLATFORM)/stubs/crt0.o .
-	@echo "\x1B[0;1;34m ar  \x1B[0m libc.a"
+	@echo "\x1B[0;1;93m ar  \x1B[0m libc.a"
 	@$(AR) rvs libc.a $(OBJA_FILTERED) $(OBJC)
 
 install: libc.a
