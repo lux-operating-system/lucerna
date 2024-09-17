@@ -19,4 +19,6 @@ pid_t getpid(void);
 pid_t gettid(void);
 uid_t getuid(void);
 uid_t getgid(void);
+ssize_t read(int, void *, size_t);
+ssize_t write(int, const void *, size_t);
 void *sbrk(intptr_t);
