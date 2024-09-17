@@ -8,6 +8,7 @@
 /* these functions must be defined for every platform lucerna is to be ported to */
 
 #include <errno.h>
+#include <stdarg.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
@@ -64,6 +65,21 @@ unsigned long msleep(unsigned long msec) {
 }
 
 /* Group 2: File System Manipulation */
+
+int open(const char *path, int flags, ...) {
+    va_list args;
+    va_start(args, flags);
+    mode_t mode = va_arg(args, mode_t);
+    va_end(args);
+
+    int status = (int) luxSyscall(SYSCALL_OPEN, (uint64_t)path, flags, mode, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    }
+
+    return status;
+}
 
 int stat(const char *path, struct stat *buf) {
     int status = (int) luxSyscall(SYSCALL_STAT, (uint64_t)path, (uint64_t)buf, 0, 0);
