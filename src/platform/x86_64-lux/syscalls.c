@@ -81,6 +81,16 @@ int open(const char *path, int flags, ...) {
     return status;
 }
 
+ssize_t read(int fd, void *buffer, size_t count) {
+    ssize_t status = (ssize_t) luxSyscall(SYSCALL_READ, fd, (uint64_t) buffer, count, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    }
+
+    return status;
+}
+
 int stat(const char *path, struct stat *buf) {
     int status = (int) luxSyscall(SYSCALL_STAT, (uint64_t)path, (uint64_t)buf, 0, 0);
     if(status < 0) {
