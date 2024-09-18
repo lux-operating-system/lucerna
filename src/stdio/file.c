@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <fnctl.h>
 #include <errno.h>
+#include <unistd.h>
 
 FILE *fopen(const char *path, const char *mode) {
     if(!strlen(path)) {
