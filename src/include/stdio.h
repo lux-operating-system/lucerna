@@ -9,5 +9,14 @@
 #include <stddef.h>
 #include <sys/types.h>
 
+#define EOF                 -1
+
+typedef struct {
+    int fd;
+} FILE;
+
 int vsprintf(char *, const char *, va_list);
 int sprintf(char *, const char *, ...);
+
+FILE *fopen(const char *, const char *);
+int fclose(FILE *);
