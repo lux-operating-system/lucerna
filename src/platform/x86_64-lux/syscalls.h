@@ -73,5 +73,6 @@
 /* Group 5: Driver I/O Functions */
 
 #define SYSCALL_IOPERM          47
+#define SYSCALL_IRQ             48
 
 uint64_t luxSyscall(uint64_t request, uint64_t p0, uint64_t p1, uint64_t p2, uint64_t p3);

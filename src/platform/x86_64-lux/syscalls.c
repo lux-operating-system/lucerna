@@ -12,6 +12,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
+#include <sys/lux/lux.h>
 #include "syscalls.h"
 
 /* Group 1: Processes, Threads, and Users */
@@ -231,4 +232,14 @@ int ioperm(uintptr_t base, uintptr_t count, int enable) {
     } else {
         return status;
     }
+}
+
+int irq(int pin, IRQHandler *handler) {
+    int status = (int) luxSyscall(SYSCALL_IRQ, pin, (uint64_t)handler, 0, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    }
+
+    return status;
 }
