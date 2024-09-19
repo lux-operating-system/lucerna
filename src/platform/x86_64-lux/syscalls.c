@@ -121,6 +121,16 @@ int stat(const char *path, struct stat *buf) {
     return status;
 }
 
+int fstat(int fd, struct stat *buf) {
+    int status = (int) luxSyscall(SYSCALL_FSTAT, fd, (uint64_t)buf, 0, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    }
+
+    return status;
+}
+
 int mount(const char *src, const char *tgt, const char *type, int flags, void *data) {
     int status = (int) luxSyscall(SYSCALL_MOUNT, (uint64_t)src, (uint64_t)tgt, (uint64_t)type, flags);
     if(status < 0) {
@@ -209,4 +219,16 @@ ssize_t send(int sd, const void *buffer, size_t len, int flags) {
 
 void *sbrk(intptr_t delta) {
     return (void *)luxSyscall(SYSCALL_SBRK, (uint64_t)delta, 0, 0, 0);
+}
+
+/* Group 5: Driver I/O Functions */
+
+int ioperm(uintptr_t base, uintptr_t count, int enable) {
+    int status = (int) luxSyscall(SYSCALL_IOPERM, base, count, enable, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    } else {
+        return status;
+    }
 }
