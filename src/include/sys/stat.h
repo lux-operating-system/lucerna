@@ -56,3 +56,4 @@ struct stat {
 #define S_ISLNK(m)          ((m & S_IFMT) == S_IFLNK)
 
 int stat(const char *, struct stat *);
+int fstat(int, struct stat *);
