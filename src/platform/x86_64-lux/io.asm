@@ -19,7 +19,7 @@ outb:
 ; void outw(uintptr_t port, uint16_t data)
 global outw
 align 16
-outb:
+outw:
     mov dx, di
     mov eax, esi
     out dx, ax
@@ -28,7 +28,7 @@ outb:
 ; void outd(uintptr_t port, uint32_t data)
 global outb
 align 16
-outb:
+outd:
     mov dx, di
     mov eax, esi
     out dx, eax
