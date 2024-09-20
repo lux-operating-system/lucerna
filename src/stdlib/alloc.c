@@ -44,6 +44,12 @@ void *malloc(size_t n) {
         hdr->valid = 1;
 
         ptr = (void *)((uintptr_t)ptr + sizeof(struct mallocHeader));
+
+        if(hdr->next < (dataSegmentSize - sizeof(struct mallocHeader))) {
+            hdr = (struct mallocHeader *)((uintptr_t)hdr + hdr->next);
+            hdr->next = 0;
+            hdr->valid = 0;
+        }
         return ptr;
     }
 
