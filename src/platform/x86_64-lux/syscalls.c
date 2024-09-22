@@ -260,6 +260,8 @@ int ioctl(int fd, unsigned long op, ...) {
         status = (int) luxSyscall(SYSCALL_IOCTL, fd, op, 0, 0);
     }
 
+    va_end(args);
+
     if(status < 0) {
         errno = -1*status;
         return -1;
