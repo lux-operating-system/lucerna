@@ -15,6 +15,8 @@
  * on any other terminal implementation */
 
 #define PTY_GET_SLAVE           (0x10 | IOCTL_OUT_PARAM)
+#define PTY_GRANT_PT            0x20
+#define PTY_UNLOCK_PT           0x30
 
 static char ptyname[128];
 
@@ -66,4 +68,25 @@ int ptsname_r(int fd, char *buf, size_t bufsz) {
     }
 
     return 0;
+}
+
+/* grantpt(): changes the mode and owner of the slave pseudo-terminal
+ * the owner will be set to the UID of the caller and the permissions
+ * will be set to rw--w----
+ *
+ * params: fd - file descriptor of the master
+ * returns: zero on success, -1 on error and errno set
+ */
+
+int grantpt(int fd) {
+    return ioctl(fd, PTY_GRANT_PT, 0);
+}
+
+/* unlockpt(): unlocks the slave pseudo-terminal so that can be opened
+ * params: fd - file descriptor of the master
+ * returns: zero on success, -1 on error and errno set
+ */
+
+int unlockpt(int fd) {
+    return ioctl(fd, PTY_UNLOCK_PT, 0);
 }
