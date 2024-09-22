@@ -19,6 +19,8 @@ extern FILE *stdin, *stdout, *stderr;
 
 int vsprintf(char *, const char *, va_list);
 int sprintf(char *, const char *, ...);
+int vsnprintf(char *, size_t, const char *, va_list);
+int snprintf(char *, size_t, const char *, ...);
 int vfprintf(FILE *, const char *, va_list);
 int fprintf(FILE *, const char *, ...);
 int vprintf(const char *, va_list);

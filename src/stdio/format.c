@@ -11,6 +11,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
+#include <errno.h>
+#include <stdio.h>
 
 int vsprintf(char *dst, const char *f, va_list args) {
     int l = 0;
@@ -34,7 +36,7 @@ int vsprintf(char *dst, const char *f, va_list args) {
         if(formatter) {
             if(*f == '%') {
                 formatter = false;
-                dst[l] = '%';
+                if(dst) dst[l] = '%';
                 l++;
             } else {
                 format[formatIndex] = *f;
@@ -57,12 +59,12 @@ int vsprintf(char *dst, const char *f, va_list args) {
                     switch(format[formatIndex-1]) {
                     case 'c':
                         number = va_arg(args, int);
-                        dst[l] = number;
+                        if(dst) dst[l] = number;
                         l++;
                         break;
                     case 's':
                         str = va_arg(args, char *);
-                        strcpy(&dst[l], str);
+                        if(dst) strcpy(&dst[l], str);
                         l += strlen(str);
                         break;
                     case 'd':
@@ -79,7 +81,7 @@ int vsprintf(char *dst, const char *f, va_list args) {
                             }
                         }
                         
-                        strcpy(&dst[l], buffer);
+                        if(dst) strcpy(&dst[l], buffer);
                         l += numberLength;
                         break;
                     case 'x':
@@ -94,7 +96,7 @@ int vsprintf(char *dst, const char *f, va_list args) {
                             }
                         }
                         
-                        strcpy(&dst[l], buffer);
+                        if(dst) strcpy(&dst[l], buffer);
                         l += numberLength;
                         break;
                     case 'X':
@@ -104,35 +106,35 @@ int vsprintf(char *dst, const char *f, va_list args) {
                         numberLength = strlen(buffer);
                         if(numberLength < paddingLength) {
                             for(int i = 0; i < (paddingLength-numberLength); i++) {
-                                dst[l] = paddingCharacter;
+                                if(dst) dst[l] = paddingCharacter;
                                 l++;
                             }
                         }
                         
                         for(int i = 0; i < numberLength; i++) {
                             if(buffer[i] >= 'a' && buffer[i] <= 'f') {
-                                dst[l] = buffer[i] - 0x20;
+                                if(dst) dst[l] = buffer[i] - 0x20;
                             } else {
-                                dst[l] = buffer[i];
+                                if(dst) dst[l] = buffer[i];
                             }
 
                             l++;
                         }
                         break;
                     default:
-                        strcpy(&dst[l], format);
+                        if(dst) strcpy(&dst[l], format);
                         l += strlen(format);
                     }
                 }
             }
         } else {
-            dst[l] = *f;
+            if(dst) dst[l] = *f;
             l++;
         }
         f++;
     }
 
-    dst[l] = 0;
+    if(dst) dst[l] = 0;
     return l;
 }
 
@@ -140,6 +142,67 @@ int sprintf(char *dst, const char *f, ...) {
     va_list args;
     va_start(args, f);
     int n = vsprintf(dst, f, args);
+    va_end(args);
+    return n;
+}
+
+int vsnprintf(char *dst, size_t bufsz, const char *f, va_list args) {
+    int len = vsprintf(NULL, f, args);
+    if(!bufsz) return len;
+    else if(len > bufsz) {
+        char *temp = malloc(len+1);
+        if(!temp) {
+            errno = ENOMEM;
+            return -1;
+        }
+
+        vsprintf(temp, f, args);
+        memcpy(dst, temp, bufsz-1);
+        dst[bufsz-1] = 0;
+        free(temp);
+
+        return bufsz;
+    }
+
+    return vsprintf(dst, f, args);
+}
+
+int snprintf(char *dst, size_t bufsz, const char *f, ...) {
+    va_list args;
+    va_start(args, f);
+    int n = vsnprintf(dst, bufsz, f, args);
+    va_end(args);
+    return n;
+}
+
+int vfprintf(FILE *f, const char *fmt, va_list args) {
+    int len = vsnprintf(NULL, 0, fmt, args);
+    char *temp = malloc(len+1);
+    if(!temp) {
+        errno = ENOMEM;
+        return -1;
+    }
+
+    vsnprintf(temp, len, fmt, args);
+    return fwrite(temp, 1, len, f);
+}
+
+int fprintf(FILE *f, const char *fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    int n = vfprintf(f, fmt, args);
+    va_end(args);
+    return n;
+}
+
+int vprintf(const char *f, va_list args) {
+    return vfprintf(stdout, f, args);
+}
+
+int printf(const char *fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    int n = vprintf(fmt, args);
     va_end(args);
     return n;
 }
