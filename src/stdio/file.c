@@ -94,10 +94,23 @@ size_t fread(void *buffer, size_t size, size_t count, FILE *f) {
 }
 
 int puts(const char *s) {
+    return fputs(s, stdout);
+}
+
+int fputs(const char *s, FILE *f) {
     int len = strlen(s) + 1;
-    size_t status = fwrite(s, 1, strlen(s), stdout);
+    size_t status = fwrite(s, 1, strlen(s), f);
     if(!status || status == EOF) return EOF;
-    fwrite("\n", 1, 1, stdout);
+    fwrite("\n", 1, 1, f);
 
     return len;
+}
+
+int putc(int ch, FILE *f) {
+    if(fwrite(&ch, 1, 1, f) == 1) return ch;
+    else return EOF;
+}
+
+int fputc(int ch, FILE *f) {
+    return putc(ch, f);
 }
