@@ -10,6 +10,14 @@
 #include <errno.h>
 #include <unistd.h>
 
+static FILE _stdin = { .fd = 0 };
+static FILE _stdout = { .fd = 1 };
+static FILE _stderr = { .fd = 2 };
+
+FILE *stdin = &_stdin;
+FILE *stdout = &_stdout;
+FILE *stderr = &_stderr;
+
 FILE *fopen(const char *path, const char *mode) {
     if(!strlen(path)) {
         errno = ENOENT;
@@ -65,4 +73,31 @@ int fclose(FILE *file) {
     int status = close(file->fd);
     if(status) return EOF;
     else return 0;
+}
+
+size_t fwrite(const void *buffer, size_t size, size_t count, FILE *f) {
+    size_t s = size*count;
+    if(!s) return 0;
+
+    ssize_t status = write(f->fd, buffer, s);
+    if(status > 0) return status;
+    else return 0;
+}
+
+size_t fread(void *buffer, size_t size, size_t count, FILE *f) {
+    size_t s = size*count;
+    if(!s) return 0;
+
+    ssize_t status = read(f->fd, buffer, s);
+    if(status > 0) return status;
+    else return 0;
+}
+
+int puts(const char *s) {
+    int len = strlen(s) + 1;
+    size_t status = fwrite(s, 1, strlen(s), stdout);
+    if(!status || status == EOF) return EOF;
+    fwrite("\n", 1, 1, stdout);
+
+    return len;
 }
