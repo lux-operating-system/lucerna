@@ -10,7 +10,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#define BRK_INCREMENTS      65536       // so we don't have to keep making syscalls on every allocation
+#define BRK_INCREMENTS      4096
 
 static void *programBreak = NULL;
 static size_t dataSegmentSize = 0;
