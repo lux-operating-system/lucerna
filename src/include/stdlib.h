@@ -22,6 +22,8 @@ char *ltoa(long, char *, int);
 long atol(const char *);
 
 void exit(int);
+
+int posix_openpt(int);
 char *ptsname(int);
 int ptsname_r(int, char *, size_t);
 int grantpt(int);

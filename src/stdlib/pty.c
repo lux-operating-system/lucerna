@@ -11,6 +11,11 @@
 
 #ifndef __LUCERNA_PTY
 
+int posix_openpt(int flags) {
+    errno = ENOSYS;
+    return -1;
+}
+
 char *ptsname(int fd) {
     errno = ENOSYS;
     return NULL;

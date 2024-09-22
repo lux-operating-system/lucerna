@@ -9,6 +9,7 @@
 #include <string.h>
 #include <errno.h>
 #include <sys/ioctl.h>
+#include <fnctl.h>
 
 /* ioctl commands here are specific to the luxOS pty driver and will not work
  * on any other terminal implementation */
@@ -16,6 +17,15 @@
 #define PTY_GET_SLAVE           (0x10 | IOCTL_OUT_PARAM)
 
 static char ptyname[128];
+
+/* posix_openpt(): creates and opens a new pseudo-terminal
+ * params: flags - open flags to be used in the master descriptor
+ * returns: file descriptor of the master, -1 on error and errno set
+ */
+
+int posix_openpt(int flags) {
+    return open("/dev/ptmx", flags & (O_RDWR | O_CLOEXEC), 0);
+}
 
 /* ptsname(): returns the name of the slave pseudo-terminal
  * params: fd - file descriptor of the master
