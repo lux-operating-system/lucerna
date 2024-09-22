@@ -12,6 +12,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
+#include <sys/ioctl.h>
 #include <sys/lux/lux.h>
 #include "syscalls.h"
 
@@ -236,6 +237,29 @@ int ioperm(uintptr_t base, uintptr_t count, int enable) {
 
 int irq(int pin, IRQHandler *handler) {
     int status = (int) luxSyscall(SYSCALL_IRQ, pin, (uint64_t)handler, 0, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    }
+
+    return status;
+}
+
+int ioctl(int fd, unsigned long op, ...) {
+    va_list args;
+    va_start(args, op);
+
+    int status;
+    if(op & IOCTL_IN_PARAM) {
+        unsigned long param = va_arg(args, unsigned long);
+        status = (int) luxSyscall(SYSCALL_IOCTL, fd, op, param, 0);
+    } else if(op & IOCTL_OUT_PARAM) {
+        unsigned long *param = va_arg(args, unsigned long *);
+        status = (int) luxSyscall(SYSCALL_IOCTL, fd, op, (uint64_t) param, 0);
+    } else {
+        status = (int) luxSyscall(SYSCALL_IOCTL, fd, op, 0, 0);
+    }
+
     if(status < 0) {
         errno = -1*status;
         return -1;
