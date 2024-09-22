@@ -1,6 +1,8 @@
 PLATFORM=x86_64-lux
+OS=__LUCERNA_LUX
+ARCH=__LUCERNA_X86_64
 ASFLAGS=-f elf64 -i./src/platform/$(PLATFORM)
-CCFLAGS=-Wall -c -I./src/include -ffreestanding -O3
+CCFLAGS=-D$(OS) -D$(ARCH) -D__LUCERNA_PTY -Wall -c -I./src/include -ffreestanding -O3
 AS=nasm
 CC=x86_64-lux-gcc
 AR=x86_64-lux-ar
