@@ -26,7 +26,7 @@ outw:
     ret
 
 ; void outd(uintptr_t port, uint32_t data)
-global outb
+global outd
 align 16
 outd:
     mov dx, di
