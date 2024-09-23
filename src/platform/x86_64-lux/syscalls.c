@@ -133,6 +133,16 @@ int fstat(int fd, struct stat *buf) {
     return status;
 }
 
+off_t lseek(int fd, off_t offset, int where) {
+    off_t status = (off_t) luxSyscall(SYSCALL_LSEEK, fd, offset, where, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    }
+
+    return status;
+}
+
 int mount(const char *src, const char *tgt, const char *type, int flags, void *data) {
     int status = (int) luxSyscall(SYSCALL_MOUNT, (uint64_t)src, (uint64_t)tgt, (uint64_t)type, flags);
     if(status < 0) {
