@@ -26,7 +26,7 @@ static char ptyname[128];
  */
 
 int posix_openpt(int flags) {
-    return open("/dev/ptmx", flags & (O_RDWR | O_CLOEXEC | O_NOCTTY), 0);
+    return open("/dev/ptmx", flags & (O_RDWR | O_CLOEXEC | O_NOCTTY | O_NONBLOCK), 0);
 }
 
 /* ptsname(): returns the name of the slave pseudo-terminal
