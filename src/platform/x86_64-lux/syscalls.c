@@ -9,6 +9,7 @@
 
 #include <errno.h>
 #include <stdarg.h>
+#include <dirent.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
@@ -151,6 +152,56 @@ int mount(const char *src, const char *tgt, const char *type, int flags, void *d
     }
 
     return status;
+}
+
+DIR *opendir(const char *path) {
+    long status = (long) luxSyscall(SYSCALL_OPENDIR, (uint64_t)path, 0, 0, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return NULL;
+    }
+
+    return (DIR *) status;
+}
+
+int closedir(DIR *dir) {
+    int status = (int) luxSyscall(SYSCALL_CLOSEDIR, (uint64_t)dir, 0, 0, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    }
+
+    return 0;
+}
+
+int readdir_r(DIR *dir, struct dirent *entry, struct dirent **result) {
+    int status = (int) luxSyscall(SYSCALL_READDIR_R, (uint64_t) dir, (uint64_t) entry, (uint64_t) result, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return errno;
+    }
+
+    return 0;
+}
+
+static struct dirent direntry;  /* for the non-thread-safe readdir() */
+
+struct dirent *readdir(DIR *dir) {
+    struct dirent *ptr = &direntry;
+    if(!readdir_r(dir, &direntry, &ptr)) return ptr;
+    else return NULL;
+}
+
+void seekdir(DIR *dir, long position) {
+    luxSyscall(SYSCALL_SEEKDIR, (uint64_t) dir, position, 0, 0);
+}
+
+long telldir(DIR *dir) {
+    return (long) luxSyscall(SYSCALL_TELLDIR, (uint64_t) dir, 0, 0, 0);
+}
+
+void rewinddir(DIR *dir) {
+    seekdir(dir, 0);
 }
 
 /* Group 3: Interprocess Communication */
