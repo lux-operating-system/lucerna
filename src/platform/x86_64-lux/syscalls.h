@@ -49,31 +49,33 @@
 #define SYSCALL_MOUNT           30
 #define SYSCALL_UMOUNT          31
 #define SYSCALL_FNCTL           32
-#define SYSCALL_ISATTY          33
+#define SYSCALL_OPENDIR         33
+#define SYSCALL_CLOSEDIR        34
+#define SYSCALL_READDIR_R       35
+#define SYSCALL_SEEKDIR         36
+#define SYSCALL_TELLDIR         37
 
 /* Group 3: Interprocess Communication */
 
-#define SYSCALL_SOCKET          34
-#define SYSCALL_CONNECT         35
-#define SYSCALL_BIND            36
-#define SYSCALL_LISTEN          37
-#define SYSCALL_ACCEPT          38
-#define SYSCALL_RECV            39
-#define SYSCALL_SEND            40
-#define SYSCALL_KILL            41
+#define SYSCALL_SOCKET          38
+#define SYSCALL_CONNECT         39
+#define SYSCALL_BIND            40
+#define SYSCALL_LISTEN          41
+#define SYSCALL_ACCEPT          42
+#define SYSCALL_RECV            43
+#define SYSCALL_SEND            44
+#define SYSCALL_KILL            45
 
 /* Group 4: Memory Management */
 
-#define SYSCALL_SBRK            42
-#define SYSCALL_MMAP            43
-#define SYSCALL_MUNMAP          44
-#define SYSCALL_MLOCK           45
-#define SYSCALL_MUNLOCK         46
+#define SYSCALL_SBRK            46
+#define SYSCALL_MMAP            47
+#define SYSCALL_MUNMAP          48
 
 /* Group 5: Driver I/O Functions */
 
-#define SYSCALL_IOPERM          47
-#define SYSCALL_IRQ             48
-#define SYSCALL_IOCTL           49
+#define SYSCALL_IOPERM          49
+#define SYSCALL_IRQ             50
+#define SYSCALL_IOCTL           51
 
 uint64_t luxSyscall(uint64_t request, uint64_t p0, uint64_t p1, uint64_t p2, uint64_t p3);
