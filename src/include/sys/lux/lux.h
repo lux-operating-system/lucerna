@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include <sys/types.h>
 
 typedef struct {
     char name[256];     // device name
@@ -19,3 +19,5 @@ typedef struct {
 
 int execrdv(const char *, const char **);
 int irq(int, IRQHandler *);
+uintptr_t mmio(uintptr_t, off_t, int);
+uintptr_t pcontig(uintptr_t, off_t, int);
