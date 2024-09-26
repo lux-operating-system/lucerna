@@ -10,6 +10,8 @@
 #include <errno.h>
 #include <stdarg.h>
 #include <dirent.h>
+#include <limits.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
@@ -184,11 +186,17 @@ int readdir_r(DIR *dir, struct dirent *entry, struct dirent **result) {
     return 0;
 }
 
-static struct dirent direntry;  /* for the non-thread-safe readdir() */
+static struct dirent *direntry = NULL;  /* for the non-thread-safe readdir() */
 
 struct dirent *readdir(DIR *dir) {
-    struct dirent *ptr = &direntry;
-    if(!readdir_r(dir, &direntry, &ptr)) return ptr;
+    if(!direntry) direntry = malloc(sizeof(struct dirent) + PATH_MAX);
+    if(!direntry) {
+        errno = ENOMEM;
+        return NULL;
+    }
+
+    struct dirent **ptr = &direntry;
+    if(!readdir_r(dir, direntry, ptr)) return *ptr;
     else return NULL;
 }
 
