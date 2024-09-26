@@ -80,7 +80,7 @@ size_t fwrite(const void *buffer, size_t size, size_t count, FILE *f) {
     if(!s) return 0;
 
     ssize_t status = write(f->fd, buffer, s);
-    if(status > 0) return status;
+    if(status > 0) return status / size;
     else return 0;
 }
 
@@ -89,7 +89,7 @@ size_t fread(void *buffer, size_t size, size_t count, FILE *f) {
     if(!s) return 0;
 
     ssize_t status = read(f->fd, buffer, s);
-    if(status > 0) return status;
+    if(status > 0) return status / size;
     else return 0;
 }
 
