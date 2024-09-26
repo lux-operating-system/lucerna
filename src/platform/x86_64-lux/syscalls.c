@@ -338,3 +338,11 @@ int ioctl(int fd, unsigned long op, ...) {
 
     return status;
 }
+
+uintptr_t mmio(uintptr_t addr, off_t count, int flags) {
+    return (uintptr_t) luxSyscall(SYSCALL_MMIO, addr, count, flags, 0);
+}
+
+uintptr_t pcontig(uintptr_t addr, off_t count, int flags) {
+    return (uintptr_t) luxSyscall(SYSCALL_PCONTIG, addr, count, flags, 0);
+}
