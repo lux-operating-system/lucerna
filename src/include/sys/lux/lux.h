@@ -15,6 +15,10 @@
 #define MMIO_CD         0x08    // cache disable
 #define MMIO_ENABLE     0x80    // create mapping; clear to unmap
 
+// for allocating contigious physical memory in the 32-bit address space
+// this will someday be necessary for device drivers (like AHCI)
+#define PMM_CONTIGUOUS_LOW      0x01
+
 typedef struct {
     char name[256];     // device name
     char driver[256];   // name of server/driver prefixed with "lux:///ks"
