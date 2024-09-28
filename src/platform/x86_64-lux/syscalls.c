@@ -346,3 +346,7 @@ uintptr_t mmio(uintptr_t addr, off_t count, int flags) {
 uintptr_t pcontig(uintptr_t addr, off_t count, int flags) {
     return (uintptr_t) luxSyscall(SYSCALL_PCONTIG, addr, count, flags, 0);
 }
+
+uintptr_t vtop(uintptr_t addr) {
+    return (uintptr_t) luxSyscall(SYSCALL_VTOP, addr, 0, 0, 0);
+}
