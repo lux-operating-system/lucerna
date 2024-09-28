@@ -16,8 +16,9 @@ static void *programBreak = NULL;
 static size_t dataSegmentSize = 0;
 
 struct mallocHeader {
-    size_t next;           // bytes to skip to next block
+    size_t next;            // bytes to skip to next block
     int valid;
+    int reserved;           // for alignment
 };
 
 static size_t roundToBrkIncrement(size_t n) {
@@ -27,6 +28,9 @@ static size_t roundToBrkIncrement(size_t n) {
 
 void *malloc(size_t n) {
     if(!n) return NULL;
+
+    // enforce alignment
+    while(n % 16) n++;
     void *ptr;
     struct mallocHeader *hdr;
     size_t increment = roundToBrkIncrement(n + sizeof(struct mallocHeader));
