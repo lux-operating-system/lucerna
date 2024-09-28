@@ -31,3 +31,4 @@ int execrdv(const char *, const char **);
 int irq(int, IRQHandler *);
 uintptr_t mmio(uintptr_t, off_t, int);
 uintptr_t pcontig(uintptr_t, off_t, int);
+uintptr_t vtop(uintptr_t);
