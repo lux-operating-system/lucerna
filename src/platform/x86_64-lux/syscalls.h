@@ -46,39 +46,40 @@
 #define SYSCALL_RMDIR           27
 #define SYSCALL_UTIME           28
 #define SYSCALL_CHROOT          29
-#define SYSCALL_MOUNT           30
-#define SYSCALL_UMOUNT          31
-#define SYSCALL_FNCTL           32
-#define SYSCALL_OPENDIR         33
-#define SYSCALL_CLOSEDIR        34
-#define SYSCALL_READDIR_R       35
-#define SYSCALL_SEEKDIR         36
-#define SYSCALL_TELLDIR         37
+#define SYSCALL_CHDIR           30
+#define SYSCALL_MOUNT           31
+#define SYSCALL_UMOUNT          32
+#define SYSCALL_FNCTL           33
+#define SYSCALL_OPENDIR         34
+#define SYSCALL_CLOSEDIR        35
+#define SYSCALL_READDIR_R       36
+#define SYSCALL_SEEKDIR         37
+#define SYSCALL_TELLDIR         38
 
 /* Group 3: Interprocess Communication */
 
-#define SYSCALL_SOCKET          38
-#define SYSCALL_CONNECT         39
-#define SYSCALL_BIND            40
-#define SYSCALL_LISTEN          41
-#define SYSCALL_ACCEPT          42
-#define SYSCALL_RECV            43
-#define SYSCALL_SEND            44
-#define SYSCALL_KILL            45
+#define SYSCALL_SOCKET          39
+#define SYSCALL_CONNECT         40
+#define SYSCALL_BIND            41
+#define SYSCALL_LISTEN          42
+#define SYSCALL_ACCEPT          43
+#define SYSCALL_RECV            44
+#define SYSCALL_SEND            45
+#define SYSCALL_KILL            46
 
 /* Group 4: Memory Management */
 
-#define SYSCALL_SBRK            46
-#define SYSCALL_MMAP            47
-#define SYSCALL_MUNMAP          48
+#define SYSCALL_SBRK            47
+#define SYSCALL_MMAP            48
+#define SYSCALL_MUNMAP          49
 
 /* Group 5: Driver I/O Functions */
 
-#define SYSCALL_IOPERM          49
-#define SYSCALL_IRQ             50
-#define SYSCALL_IOCTL           51
-#define SYSCALL_MMIO            52
-#define SYSCALL_PCONTIG         53
-#define SYSCALL_VTOP            54
+#define SYSCALL_IOPERM          50
+#define SYSCALL_IRQ             51
+#define SYSCALL_IOCTL           52
+#define SYSCALL_MMIO            53
+#define SYSCALL_PCONTIG         54
+#define SYSCALL_VTOP            55
 
 uint64_t luxSyscall(uint64_t request, uint64_t p0, uint64_t p1, uint64_t p2, uint64_t p3);
