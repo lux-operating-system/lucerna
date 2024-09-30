@@ -22,11 +22,11 @@ pid_t vfork(void);
 int sched_yield(void);
 
 int execl(const char *, const char *, ...);
-int execv(const char *, const char **);
+int execv(const char *, char const **);
 int execle(const char *, const char *, ...);
-int execve(const char *, const char **, const char **);
+int execve(const char *, char const **, char const **);
 int execlp(const char *, const char *, ...);
-int execvp(const char *, const char **);
+int execvp(const char *, char const **);
 
 pid_t getpid(void);
 pid_t gettid(void);
