@@ -12,6 +12,7 @@
 #include <dirent.h>
 #include <limits.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
@@ -141,6 +142,19 @@ int fstat(int fd, struct stat *buf) {
 }
 
 off_t lseek(int fd, off_t offset, int where) {
+    if(where == SEEK_END) {
+        // this will allow SEEK_END without explicitly giving the kernel the
+        // sizes of all open files - this also helps keep the kernel code to
+        // an absolute minimum where possible
+
+        struct stat st;
+        if(fstat(fd, &st)) return -1;
+
+        off_t n = st.st_size;
+        n += offset;
+        return lseek(fd, n, SEEK_SET);
+    }
+
     off_t status = (off_t) luxSyscall(SYSCALL_LSEEK, fd, offset, where, 0);
     if(status < 0) {
         errno = -1*status;
