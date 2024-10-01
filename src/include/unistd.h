@@ -42,3 +42,8 @@ off_t lseek(int, off_t, int);
 int chdir(const char *);
 char *getcwd(char *, size_t);
 char *getwd(char *);
+
+int setenv(const char *, const char *, int overwrite);
+int unsetenv(const char *);
+char *getenv(const char *);
+char *secure_getenv(const char *);
