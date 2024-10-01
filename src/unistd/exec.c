@@ -7,6 +7,9 @@
 
 #include <unistd.h>
 #include <stdarg.h>
+#include <limits.h>
+#include <string.h>
+#include <stdlib.h>
 #include <errno.h>
 
 /* execle(): execve() variant that loads args from va_args followed by an array
@@ -40,6 +43,37 @@ int execlp(const char *file, const char *arg0, ...) {
 /* execvp(): execv() but searches the PATH */
 
 int execvp(const char *file, char *const argv[]) {
-    errno = ENOSYS;     // TODO
+    // for absolute paths just use execv()
+    if(file[0] == '/') return execv(file, argv);
+
+    // for everything else, search the PATH
+    char *pathenv = getenv("PATH");
+    if(!pathenv) {
+        errno = ENOENT;
+        return -1;
+    }
+
+    char *program = malloc(PATH_MAX);
+    if(!program) {
+        errno = ENOMEM;
+        return -1;
+    }
+
+    // follow the PATH in order
+    char *token = strtok(pathenv, ":");
+    while(token) {
+        strcpy(program, token);
+        strcpy(program+strlen(program), "/");
+        strcpy(program+strlen(program), file);
+
+        execv(program, argv);
+
+        // if we're here, then that didn't work, move on to the next PATH entry
+        token = strtok(NULL, ":");
+    }
+
+    // at this point the file probably doesn't exist
+    // errno is already set by execv() so we can just return
+    free(program);
     return -1;
 }
