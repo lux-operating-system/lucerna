@@ -69,6 +69,8 @@ int execvp(const char *file, char *const argv[]) {
         execv(program, argv);
 
         // if we're here, then that didn't work, move on to the next PATH entry
+        // only if the error was that the file doesn't exist
+        if(errno != ENOENT) return -1;
         token = strtok(NULL, ":");
     }
 
