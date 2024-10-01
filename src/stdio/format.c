@@ -147,6 +147,8 @@ int sprintf(char *dst, const char *f, ...) {
 }
 
 int vsnprintf(char *dst, size_t bufsz, const char *f, va_list args) {
+    va_list argsCopy;
+    va_copy(argsCopy, args);
     int len = vsprintf(NULL, f, args);
     if(!bufsz) return len;
     else if(len > bufsz) {
@@ -164,7 +166,9 @@ int vsnprintf(char *dst, size_t bufsz, const char *f, va_list args) {
         return bufsz;
     }
 
-    return vsprintf(dst, f, args);
+    int s = vsprintf(dst, f, argsCopy);
+    va_end(argsCopy);
+    return s;
 }
 
 int snprintf(char *dst, size_t bufsz, const char *f, ...) {
@@ -176,6 +180,9 @@ int snprintf(char *dst, size_t bufsz, const char *f, ...) {
 }
 
 int vfprintf(FILE *f, const char *fmt, va_list args) {
+    va_list argsCopy;
+    va_copy(argsCopy, args);
+
     int len = vsnprintf(NULL, 0, fmt, args);
     char *temp = malloc(len+1);
     if(!temp) {
@@ -183,8 +190,12 @@ int vfprintf(FILE *f, const char *fmt, va_list args) {
         return -1;
     }
 
-    vsnprintf(temp, len, fmt, args);
-    return fwrite(temp, 1, len, f);
+    vsnprintf(temp, len, fmt, argsCopy);
+    size_t s = fwrite(temp, 1, len, f);
+    free(temp);
+
+    va_end(argsCopy);
+    return s;
 }
 
 int fprintf(FILE *f, const char *fmt, ...) {
