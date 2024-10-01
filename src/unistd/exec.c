@@ -28,7 +28,7 @@ int execl(const char *path, ...) {
 
 /* execv(): execve() but inheriting the environment of the parent */
 
-int execv(const char *path, char **const argv) {
+int execv(const char *path, char *const argv[]) {
     return execve(path, argv, environ);
 }
 
@@ -41,7 +41,7 @@ int execlp(const char *file, ...) {
 
 /* execvp(): execv() but searches the PATH */
 
-int execvp(const char *file, char **const) {
+int execvp(const char *file, char *const argv[]) {
     errno = ENOSYS;     // TODO
     return -1;
 }
