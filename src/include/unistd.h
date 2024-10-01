@@ -39,3 +39,7 @@ int brk(void *);
 void *sbrk(intptr_t);
 off_t lseek(int, off_t, int);
 
+int chdir(const char *);
+char *getcwd(char *, size_t);
+char *getwd(char *);
+
