@@ -45,7 +45,11 @@ int sched_yield(void) {
 // TODO: waitpid()
 
 int execve(const char *path, char *const argv[], char *const envp[]) {
-    return (int) luxSyscall(SYSCALL_EXECVE, (uint64_t)path, (uint64_t)argv, (uint64_t)envp, 0);
+    int status = (int) luxSyscall(SYSCALL_EXECVE, (uint64_t)path, (uint64_t)argv, (uint64_t)envp, 0);
+
+    // execve() doesn't return unless an error occurred
+    errno = -1*status;
+    return -1;
 }
 
 int execrdv(const char *name, const char **argv) {
