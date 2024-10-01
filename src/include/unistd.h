@@ -35,6 +35,7 @@ uid_t getgid(void);
 int close(int);
 ssize_t read(int, void *, size_t);
 ssize_t write(int, const void *, size_t);
+int brk(void *);
 void *sbrk(intptr_t);
 off_t lseek(int, off_t, int);
 
