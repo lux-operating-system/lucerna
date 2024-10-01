@@ -17,15 +17,40 @@ section .text
 global _start
 align 16
 _start:
-    mov rdx, rsi    ; rdx = env
-    mov rsi, rdi    ; rsi = argv
-    xor rdi, rdi    ; TODO: rdi = argc
+    ; at the start from the kernel, rdi = argv, and rsi = envp
 
-    extern main     ; int main(int argc, char **argv, char **env)
-    call main       ; the env is obviously optional and probably should not be assumed to exist
+    mov rdx, rsi        ; rdx = envp
+    mov rsi, rdi        ; rsi = argv
 
-    mov rdi, rax    ; return value from main()
+    xor rdi, rdi        ; argc = 0
+    test rsi, rsi       ; null?
+    jz .main
+
+    ; nope, count the arguments
+    push rsi
+
+.count_args:
+    lodsq
+    test rax, rax
+    jz .counted
+
+    inc rdi             ; increment argc
+    jmp .count_args
+
+.counted:
+    pop rsi             ; original argv
+
+.main:
+    ; store the environmental variables
+    extern environ
+    mov r8, environ
+    mov [r8], rdx
+
+    extern main         ; int main(int argc, char **argv, char **envp)
+    call main           ; the env is obviously optional and probably should not be assumed to exist
+
+    mov rdi, rax        ; return value from main()
     xor rax, rax
-    syscall         ; exit()
+    syscall             ; exit()
 
-    jmp $           ; this is unreachable but just in case
+    jmp $               ; this is unreachable but just in case
