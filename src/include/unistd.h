@@ -21,12 +21,12 @@ pid_t fork(void);
 pid_t vfork(void);
 int sched_yield(void);
 
-int execl(const char *, const char *, ...);
-int execv(const char *, char const **);
-int execle(const char *, const char *, ...);
-int execve(const char *, char const **, char const **);
-int execlp(const char *, const char *, ...);
-int execvp(const char *, char const **);
+int execl(const char *, ...);
+int execv(const char *, char **const);
+int execle(const char *, ...);
+int execve(const char *, char **const, char **const);
+int execlp(const char *, ...);
+int execvp(const char *, char **const);
 
 pid_t getpid(void);
 pid_t gettid(void);
@@ -42,4 +42,3 @@ off_t lseek(int, off_t, int);
 int chdir(const char *);
 char *getcwd(char *, size_t);
 char *getwd(char *);
-
