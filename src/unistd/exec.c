@@ -3,13 +3,11 @@
  * Omar Elghoul, 2024
  */
 
-/* Implementation of unistd.h: Program execution and environmental variables */
+/* Implementation of unistd.h: Program execution */
 
 #include <unistd.h>
 #include <stdarg.h>
 #include <errno.h>
-
-char **environ;
 
 /* execle(): execve() variant that loads args from va_args followed by an array
  * of environmental variables */
