@@ -83,3 +83,43 @@ int memcmp(const void *d1, const void *d2, size_t n) {
 
     return 0;
 }
+
+static int strContainsChar(const char *str, char c) {
+    for(int i = 0; i < strlen(str); i++) {
+        if(str[i] == c) return 1;
+    }
+
+    return 0;
+}
+
+static char *strtoklast = NULL;
+
+char *strtok_r(char *s1, const char *s2, char **lasts) {
+    if(!s1) s1 = *lasts;
+    char *start = NULL;
+
+    // search for a byte that is NOT in s2
+    for(int i = 0; i < strlen(s1); i++) {
+        if(!strContainsChar(s2, s1[i])) {
+            // start of token
+            start = &s1[i];
+
+            i++;
+            if(!s1[i]) return NULL;
+
+            // now search for the end of the token
+            while(s1[i] && !strContainsChar(s2, s1[i])) i++;
+
+            s1[i] = 0;      // null terminate
+            *lasts = &s1[i+1];
+
+            return start;
+        }
+    }
+
+    return NULL;
+}
+
+char *strtok(char *s1, const char *s2) {
+    return strtok_r(s1, s2, &strtoklast);
+}
