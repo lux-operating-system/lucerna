@@ -164,6 +164,26 @@ off_t lseek(int fd, off_t offset, int where) {
     return status;
 }
 
+int chdir(const char *path) {
+    int status = (int) luxSyscall(SYSCALL_CHDIR, (uint64_t)path, 0, 0, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    }
+
+    return status;
+}
+
+char *getcwd(char *buf, size_t bufsz) {
+    intptr_t ret = (intptr_t) luxSyscall(SYSCALL_GETCWD, (uint64_t)buf, bufsz, 0, 0);
+    if(ret < 0) {
+        errno = -1*ret;
+        return NULL;
+    }
+
+    return (char *) ret;
+}
+
 int mount(const char *src, const char *tgt, const char *type, int flags, void *data) {
     int status = (int) luxSyscall(SYSCALL_MOUNT, (uint64_t)src, (uint64_t)tgt, (uint64_t)type, flags);
     if(status < 0) {
