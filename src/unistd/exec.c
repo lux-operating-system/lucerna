@@ -12,14 +12,14 @@
 /* execle(): execve() variant that loads args from va_args followed by an array
  * of environmental variables */
 
-int execle(const char *path, ...) {
+int execle(const char *path, const char *arg0, ...) {
     errno = ENOSYS;     // TODO
     return -1;
 }
 
 /* execl(): execle() but inheriting the environment of the parent */
 
-int execl(const char *path, ...) {
+int execl(const char *path, const char *arg0, ...) {
     errno = ENOSYS;     // TODO
     return -1;
 }
@@ -32,7 +32,7 @@ int execv(const char *path, char *const argv[]) {
 
 /* execlp(): execl() but searches the PATH */
 
-int execlp(const char *file, ...) {
+int execlp(const char *file, const char *arg0, ...) {
     errno = ENOSYS;     // TODO
     return -1;
 }
