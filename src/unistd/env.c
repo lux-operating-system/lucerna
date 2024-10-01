@@ -74,6 +74,7 @@ int setenv(const char *name, const char *value, int overwrite) {
 
         environ = newenv;
         environ[envc] = NULL;
+        mod = 1;
     }
     
     // this setup was necessary so that we can realloc() environ when necessary
