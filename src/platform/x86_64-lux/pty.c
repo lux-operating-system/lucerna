@@ -9,6 +9,7 @@
 #include <string.h>
 #include <errno.h>
 #include <sys/ioctl.h>
+#include <stdio.h>
 #include <fnctl.h>
 
 /* ioctl commands here are specific to the luxOS pty driver and will not work
@@ -17,8 +18,10 @@
 #define PTY_GET_SLAVE           (0x10 | IOCTL_OUT_PARAM)
 #define PTY_GRANT_PT            0x20
 #define PTY_UNLOCK_PT           0x30
+#define PTY_TTY_NAME            (0x40 | IOCTL_OUT_PARAM)
 
 static char ptyname[128];
+static char ttybuf[128];
 
 /* posix_openpt(): creates and opens a new pseudo-terminal
  * params: flags - open flags to be used in the master descriptor
@@ -89,4 +92,31 @@ int grantpt(int fd) {
 
 int unlockpt(int fd) {
     return ioctl(fd, PTY_UNLOCK_PT, 0);
+}
+
+/* ttyname_r(): thread-safe function to return the name of a tty
+ * params: fd - file descriptor of the slave
+ * params: buf - buffer to store file name
+ * params: bufsz - buffer size
+ * returns: zero on success
+ */
+
+int ttyname_r(int fd, char *buf, size_t bufsz) {
+    unsigned long id;
+    if(!ioctl(fd, PTY_TTY_NAME, &id)) {
+        snprintf(buf, bufsz, "/dev/pts%d", id);
+        return 0;
+    } else {
+        return errno;
+    }
+}
+
+/* ttyname(): non-thread-safe version of ttyname_r()
+ * params: fd - file descriptor of the slave
+ * returns: pointer to slave path, NULL on error
+ */
+
+char *ttyname(int fd) {
+    if(ttyname_r(fd, ttybuf, 127)) return NULL;
+    else return ttybuf;
 }
