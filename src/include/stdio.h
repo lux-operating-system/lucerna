@@ -29,8 +29,12 @@ int puts(const char *);
 int fputs(const char *, FILE *);
 int fputc(int, FILE *);
 int putc(int, FILE *);
+int getc(FILE *);
+int fgetc(FILE *);
 size_t fwrite(const void *, size_t, size_t, FILE *);
 size_t fread(void *, size_t, size_t, FILE *);
+ssize_t getdelim(char **, size_t *, int, FILE *);
+ssize_t getline(char **, size_t *, FILE *);
 
 FILE *fopen(const char *, const char *);
 int fclose(FILE *);

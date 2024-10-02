@@ -114,3 +114,67 @@ int putc(int ch, FILE *f) {
 int fputc(int ch, FILE *f) {
     return putc(ch, f);
 }
+
+int getc(FILE *f) {
+    int c;
+    if(fread(&c, 1, 1, f) == 1) return c;
+    else return -1;
+}
+
+int fgetc(FILE *f) {
+    return getc(f);
+}
+
+ssize_t getdelim(char **lineptr, size_t *n, int delim, FILE *f) {
+    if(!lineptr || !n) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    if(!*lineptr) {
+         if(*n) {
+            *lineptr = malloc(*n);
+         } else {
+            *lineptr = malloc(4096);
+            *n = 4096;
+         }
+    }
+
+    if(!*lineptr) {
+        errno = ENOMEM;
+        return -1;
+    }
+
+    char *str = *lineptr;
+
+    size_t counter = 0;
+    for(;;) {
+        int c = fgetc(f);
+        if(c == delim) break;
+
+        if(c == -1) continue;
+
+        str[counter] = c;
+        counter++;
+        if(counter >= *n) {
+            char *newptr = realloc(*lineptr, counter*2);
+            if(!newptr) {
+                errno = ENOMEM;
+                return -1;
+            }
+
+            *lineptr = newptr;
+            str = *lineptr;
+        }
+    }
+
+    str[counter] = delim;
+    str[counter+1] = 0;
+
+    *n = counter+1;
+    return *n;
+}
+
+ssize_t getline(char **lineptr, size_t *n, FILE *f) {
+    return getdelim(lineptr, n, '\n', f);
+}
