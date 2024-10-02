@@ -47,3 +47,6 @@ int setenv(const char *, const char *, int overwrite);
 int unsetenv(const char *);
 char *getenv(const char *);
 char *secure_getenv(const char *);
+
+char *ttyname(int);
+int ttyname_r(int, char *, size_t);
