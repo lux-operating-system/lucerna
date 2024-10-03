@@ -44,7 +44,7 @@ int sched_yield(void) {
 
 pid_t waitpid(pid_t pid, int *status, int options) {
     pid_t ret = (pid_t) luxSyscall(SYSCALL_WAITPID, pid, (uint64_t) status, options, 0);
-    if(status < 0) {
+    if(ret < 0) {
         errno = -1*ret;
         return -1;
     }
