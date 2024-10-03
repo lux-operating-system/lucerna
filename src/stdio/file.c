@@ -116,7 +116,7 @@ int fputc(int ch, FILE *f) {
 }
 
 int getc(FILE *f) {
-    int c;
+    int c = 0;
     if(fread(&c, 1, 1, f) == 1) return c;
     else return -1;
 }
