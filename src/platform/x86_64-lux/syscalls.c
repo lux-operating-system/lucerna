@@ -42,7 +42,15 @@ int sched_yield(void) {
     return (int) luxSyscall(SYSCALL_YIELD, 0, 0, 0, 0);
 }
 
-// TODO: waitpid()
+pid_t waitpid(pid_t pid, int *status, int options) {
+    pid_t ret = (pid_t) luxSyscall(SYSCALL_WAITPID, pid, (uint64_t) status, options, 0);
+    if(status < 0) {
+        errno = -1*ret;
+        return -1;
+    }
+
+    return ret;
+}
 
 int execve(const char *path, char *const argv[], char *const envp[]) {
     int status = (int) luxSyscall(SYSCALL_EXECVE, (uint64_t)path, (uint64_t)argv, (uint64_t)envp, 0);
