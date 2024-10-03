@@ -29,6 +29,7 @@ int puts(const char *);
 int fputs(const char *, FILE *);
 int fputc(int, FILE *);
 int putc(int, FILE *);
+int putchar(int);
 int getc(FILE *);
 int fgetc(FILE *);
 size_t fwrite(const void *, size_t, size_t, FILE *);

@@ -111,6 +111,10 @@ int putc(int ch, FILE *f) {
     else return EOF;
 }
 
+int putchar(int ch) {
+    return putc(ch, stdout);
+}
+
 int fputc(int ch, FILE *f) {
     return putc(ch, f);
 }
