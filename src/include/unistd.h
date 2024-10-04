@@ -14,6 +14,10 @@
 #define SEEK_CUR                2
 #define SEEK_END                3
 
+#define STDIN_FILENO            0
+#define STDOUT_FILENO           1
+#define STDERR_FILENO           2
+
 extern char **environ;
 void exit(int);
 void _exit(int);
@@ -50,3 +54,5 @@ char *secure_getenv(const char *);
 
 char *ttyname(int);
 int ttyname_r(int, char *, size_t);
+
+int getopt(int, char * const[], const char *);
