@@ -64,6 +64,7 @@ int vsprintf(char *dst, const char *f, va_list args) {
                         break;
                     case 's':
                         str = va_arg(args, char *);
+                        if(!str) str = "(null)";
                         if(dst) strcpy(&dst[l], str);
                         l += strlen(str);
                         break;
