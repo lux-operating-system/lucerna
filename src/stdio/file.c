@@ -10,9 +10,9 @@
 #include <errno.h>
 #include <unistd.h>
 
-static FILE _stdin = { .fd = 0 };
-static FILE _stdout = { .fd = 1 };
-static FILE _stderr = { .fd = 2 };
+static FILE _stdin = { .fd = STDIN_FILENO };
+static FILE _stdout = { .fd = STDOUT_FILENO };
+static FILE _stderr = { .fd = STDERR_FILENO };
 
 FILE *stdin = &_stdin;
 FILE *stdout = &_stdout;
@@ -35,19 +35,19 @@ FILE *fopen(const char *path, const char *mode) {
     if(!strcmp(mode, "r") || !strcmp(mode, "rb"))
         numMode = O_RDONLY;
     else if(!strcmp(mode, "w") || !strcmp(mode, "wb"))
-        numMode = O_WRONLY | O_CREAT;
+        numMode = O_WRONLY | O_CREAT | O_TRUNC;
     else if(!strcmp(mode, "a") || !strcmp(mode, "ab"))
-        numMode = O_WRONLY | O_APPEND;
+        numMode = O_WRONLY | O_CREAT | O_APPEND;
     else if(!strcmp(mode, "r+") || !strcmp(mode, "r+b") || !strcmp(mode, "rb+"))
-        numMode = O_RDWR | O_APPEND;
+        numMode = O_RDWR;
     else if(!strcmp(mode, "w+") || !strcmp(mode, "w+b") || !strcmp(mode, "wb+"))
-        numMode = O_RDWR | O_CREAT;
+        numMode = O_RDWR | O_CREAT | O_TRUNC;
     else if(!strcmp(mode, "a+") || !strcmp(mode, "a+b") || !strcmp(mode, "ab+"))
         numMode = O_RDWR | O_CREAT | O_APPEND;
     else if(!strcmp(mode, "wx") || !strcmp(mode, "wbx"))
-        numMode = O_WRONLY | O_CREAT | O_EXCL;
+        numMode = O_WRONLY | O_CREAT | O_TRUNC | O_EXCL;
     else if(!strcmp(mode, "w+x") || !strcmp(mode, "w+bx") || !strcmp(mode, "wb+x") || !strcmp(mode, "wbx+"))
-        numMode = O_RDWR | O_CREAT | O_EXCL;
+        numMode = O_RDWR | O_CREAT | O_TRUNC | O_EXCL;
 
     if(!numMode) {
         errno = EINVAL;
