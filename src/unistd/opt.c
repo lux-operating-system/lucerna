@@ -51,6 +51,7 @@ int getopt(int argc, char *const argv[], const char *optstr) {
                 if(optind >= argc) {
                     // missing argument
                     optopt = c;
+                    optarg = NULL;
                     
                     if(opterr && (*optstr != ':'))
                         fprintf(stderr, "%s: option requires an argument -- %c\n", argv[0], c);
