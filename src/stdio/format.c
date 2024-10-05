@@ -77,7 +77,7 @@ int vsprintf(char *dst, const char *f, va_list args) {
                         numberLength = strlen(buffer);
                         if(numberLength < paddingLength) {
                             for(int i = 0; i < (paddingLength-numberLength); i++) {
-                                dst[l] = paddingCharacter;
+                                if(dst) dst[l] = paddingCharacter;
                                 l++;
                             }
                         }
@@ -92,7 +92,7 @@ int vsprintf(char *dst, const char *f, va_list args) {
                         numberLength = strlen(buffer);
                         if(numberLength < paddingLength) {
                             for(int i = 0; i < (paddingLength-numberLength); i++) {
-                                dst[l] = paddingCharacter;
+                                if(dst) dst[l] = paddingCharacter;
                                 l++;
                             }
                         }
