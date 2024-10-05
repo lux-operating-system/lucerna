@@ -9,6 +9,7 @@
 #include <fnctl.h>
 #include <errno.h>
 #include <unistd.h>
+#include <sys/stat.h>
 
 static FILE _stdin = { .fd = STDIN_FILENO };
 static FILE _stdout = { .fd = STDOUT_FILENO };
@@ -76,6 +77,19 @@ int fclose(FILE *file) {
     else return 0;
 }
 
+int feof(FILE *file) {
+    if(file->eof) return 1;
+
+    struct stat st;
+    if(fstat(file->fd, &st)) return 1;
+
+    off_t position = lseek(file->fd, 0, SEEK_CUR);
+    if(position < 0) return 1;
+
+    file->eof = (position >= st.st_size);
+    return file->eof;
+}
+
 size_t fwrite(const void *buffer, size_t size, size_t count, FILE *f) {
     size_t s = size*count;
     if(!s) return 0;
@@ -123,7 +137,7 @@ int fputc(int ch, FILE *f) {
 int getc(FILE *f) {
     int c = 0;
     if(fread(&c, 1, 1, f) == 1) return c;
-    else return -1;
+    else return EOF;
 }
 
 int fgetc(FILE *f) {

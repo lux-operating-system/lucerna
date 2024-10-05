@@ -33,6 +33,7 @@ int putc(int, FILE *);
 int putchar(int);
 int getc(FILE *);
 int fgetc(FILE *);
+int feof(FILE *);
 size_t fwrite(const void *, size_t, size_t, FILE *);
 size_t fread(void *, size_t, size_t, FILE *);
 ssize_t getdelim(char **, size_t *, int, FILE *);
