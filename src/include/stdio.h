@@ -13,6 +13,7 @@
 
 typedef struct {
     int fd;
+    int eof;
 } FILE;
 
 extern FILE *stdin, *stdout, *stderr;

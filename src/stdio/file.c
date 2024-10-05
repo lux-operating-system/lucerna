@@ -66,6 +66,7 @@ FILE *fopen(const char *path, const char *mode) {
         return NULL;
     }
 
+    file->eof = 0;
     return file;
 }
 
