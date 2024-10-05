@@ -37,6 +37,8 @@ int getopt(int argc, char *const argv[], const char *optstr) {
         if(optstr[i] == c) {
             if(optstr[i+1] == ':') {
                 // option requires an argument
+                optopt = c;
+
                 if(argv[optind][argindex]) {
                     // option is present in the same arg
                     optarg = &argv[optind][argindex];
@@ -50,7 +52,6 @@ int getopt(int argc, char *const argv[], const char *optstr) {
                 argindex = 1;
                 if(optind >= argc) {
                     // missing argument
-                    optopt = c;
                     optarg = NULL;
                     
                     if(opterr && (*optstr != ':'))
