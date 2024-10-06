@@ -30,6 +30,7 @@ int getopt(int argc, char *const argv[], const char *optstr) {
     size_t arglen = strlen(argv[optind]);
     char c = argv[optind][argindex];
     argindex++;
+    optopt = c;
 
     // check if this character is in the option string
     int i = 0;
@@ -37,8 +38,6 @@ int getopt(int argc, char *const argv[], const char *optstr) {
         if(optstr[i] == c) {
             if(optstr[i+1] == ':') {
                 // option requires an argument
-                optopt = c;
-
                 if(argv[optind][argindex]) {
                     // option is present in the same arg
                     optarg = &argv[optind][argindex];
