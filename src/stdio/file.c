@@ -197,3 +197,13 @@ ssize_t getdelim(char **lineptr, size_t *n, int delim, FILE *f) {
 ssize_t getline(char **lineptr, size_t *n, FILE *f) {
     return getdelim(lineptr, n, '\n', f);
 }
+
+int fseek(FILE *f, long offset, int where) {
+    off_t s = lseek(f->fd, (off_t) offset, where);
+    if(s < 0) return -1;
+    return 0;
+}
+
+long ftell(FILE *f) {
+    return (long) lseek(f->fd, 0, SEEK_CUR);
+}

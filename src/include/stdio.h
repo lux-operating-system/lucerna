@@ -7,6 +7,7 @@
 
 #include <stdarg.h>
 #include <stddef.h>
+#include <unistd.h>
 #include <sys/types.h>
 
 #define EOF                 -1
@@ -41,3 +42,6 @@ ssize_t getline(char **, size_t *, FILE *);
 
 FILE *fopen(const char *, const char *);
 int fclose(FILE *);
+int fseek(FILE *, long, int);
+long ftell(FILE *);
+
