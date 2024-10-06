@@ -14,7 +14,7 @@
 
 typedef struct {
     int fd;
-    int eof;
+    int eof, error;
 } FILE;
 
 extern FILE *stdin, *stdout, *stderr;
@@ -35,6 +35,7 @@ int putchar(int);
 int getc(FILE *);
 int fgetc(FILE *);
 int feof(FILE *);
+int ferror(FILE *);
 size_t fwrite(const void *, size_t, size_t, FILE *);
 size_t fread(void *, size_t, size_t, FILE *);
 ssize_t getdelim(char **, size_t *, int, FILE *);
@@ -44,4 +45,4 @@ FILE *fopen(const char *, const char *);
 int fclose(FILE *);
 int fseek(FILE *, long, int);
 long ftell(FILE *);
-
+int fileno(FILE *);

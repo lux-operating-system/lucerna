@@ -68,6 +68,7 @@ FILE *fopen(const char *path, const char *mode) {
     }
 
     file->eof = 0;
+    file->error = 0;
     return file;
 }
 
@@ -94,18 +95,24 @@ size_t fwrite(const void *buffer, size_t size, size_t count, FILE *f) {
     size_t s = size*count;
     if(!s) return 0;
 
+    f->error = 0;
     ssize_t status = write(f->fd, buffer, s);
     if(status > 0) return status / size;
-    else return 0;
+
+    f->error = errno;
+    return 0;
 }
 
 size_t fread(void *buffer, size_t size, size_t count, FILE *f) {
     size_t s = size*count;
     if(!s) return 0;
 
+    f->error = 0;
     ssize_t status = read(f->fd, buffer, s);
     if(status > 0) return status / size;
-    else return 0;
+
+    f->error = errno;
+    return 0;
 }
 
 int puts(const char *s) {
@@ -206,4 +213,12 @@ int fseek(FILE *f, long offset, int where) {
 
 long ftell(FILE *f) {
     return (long) lseek(f->fd, 0, SEEK_CUR);
+}
+
+int fileno(FILE *f) {
+    return f->fd;
+}
+
+int ferror(FILE *f) {
+    return f->error;
 }
