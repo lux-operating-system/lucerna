@@ -46,3 +46,4 @@ int fclose(FILE *);
 int fseek(FILE *, long, int);
 long ftell(FILE *);
 int fileno(FILE *);
+void clearerr(FILE *);

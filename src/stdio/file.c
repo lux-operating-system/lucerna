@@ -85,7 +85,10 @@ int feof(FILE *file) {
     if(fstat(file->fd, &st)) return 1;
 
     off_t position = lseek(file->fd, 0, SEEK_CUR);
-    if(position < 0) return 1;
+    if(position < 0) {
+        file->error = EIO;
+        return 0;
+    }
 
     file->eof = (position >= st.st_size);
     return file->eof;
@@ -95,7 +98,7 @@ size_t fwrite(const void *buffer, size_t size, size_t count, FILE *f) {
     size_t s = size*count;
     if(!s) return 0;
 
-    f->error = 0;
+    clearerr(f);
     ssize_t status = write(f->fd, buffer, s);
     if(status > 0) return status / size;
 
@@ -107,7 +110,7 @@ size_t fread(void *buffer, size_t size, size_t count, FILE *f) {
     size_t s = size*count;
     if(!s) return 0;
 
-    f->error = 0;
+    clearerr(f);
     ssize_t status = read(f->fd, buffer, s);
     if(status > 0) return status / size;
 
@@ -221,4 +224,9 @@ int fileno(FILE *f) {
 
 int ferror(FILE *f) {
     return f->error;
+}
+
+void clearerr(FILE *f) {
+    f->eof = 0;
+    f->error = 0;
 }
