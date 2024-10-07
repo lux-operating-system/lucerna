@@ -44,7 +44,7 @@ int execlp(const char *file, const char *arg0, ...) {
 
 int execvp(const char *file, char *const argv[]) {
     // for absolute paths just use execv()
-    if(file[0] == '/') return execv(file, argv);
+    if(file[0] == '/' || file[0] == '.') return execv(file, argv);
 
     // for everything else, search the PATH
     char *pathenv = getenv("PATH");
