@@ -47,3 +47,5 @@ int fseek(FILE *, long, int);
 long ftell(FILE *);
 int fileno(FILE *);
 void clearerr(FILE *);
+
+void perror(const char *);
