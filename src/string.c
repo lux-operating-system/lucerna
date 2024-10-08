@@ -5,6 +5,7 @@
 
 #include <string.h>
 #include <stdint.h>
+#include <errno.h>
 
 /* String Manipulation Functions */
 
@@ -122,4 +123,88 @@ char *strtok_r(char *s1, const char *s2, char **lasts) {
 
 char *strtok(char *s1, const char *s2) {
     return strtok_r(s1, s2, &strtoklast);
+}
+
+char *strerror(int error) {
+    switch(error) {
+    case E2BIG:         return "too many arguments";
+    case EACCES:        return "access denied";
+    case EADDRINUSE:    return "address in use";
+    case EAFNOSUPPORT:  return "address family not supported";
+    case EAGAIN:        return "resource busy, retry later";
+    case EALREADY:      return "connection already in progress";
+    case EBADF:         return "invalid file descriptor";
+    case EBADMSG:       return "invalid message";
+    case EBUSY:         return "resource busy";
+    case ECANCELED:     return "operation canceled";
+    case ECHILD:        return "no child processes";
+    case ECONNABORTED:  return "connection aborted";
+    case ECONNREFUSED:  return "connection refused";
+    case ECONNRESET:    return "connection reset";
+    case EDEADLK:       return "deadlocked";
+    case EDESTADDRREQ:  return "destination address required";
+    case EDOM:          return "function argument not in domain";
+    case EDQUOT:        return "reserved";
+    case EEXIST:        return "file already exists";
+    case EFBIG:         return "file is too large";
+    case EFAULT:        return "invalid address";
+    case EHOSTUNREACH:  return "host is unreachable";
+    case EIDRM:         return "identifier removed";
+    case EILSEQ:        return "illegal byte sequence";
+    case EINPROGRESS:   return "operation in progress";
+    case EINTR:         return "interrupted";
+    case EINVAL:        return "invalid argument";
+    case EIO:           return "I/O error";
+    case EISCONN:       return "socket is already connected";
+    case EISDIR:        return "is a directory";
+    case ENOTDIR:       return "is not a directory";
+    case ELOOP:         return "symlink loop";
+    case EMFILE:        return "maximum open files for the process";
+    case ENFILE:        return "maximum open files for the system";
+    case EMLINK:        return "too many symlinks";
+    case EMSGSIZE:      return "message is too large";
+    case EMULTIHOP:     return "reserved";
+    case ENAMETOOLONG:  return "file name is too long";
+    case ENETDOWN:      return "network is down";
+    case ENETRESET:     return "connection aborted by network";
+    case ENETUNREACH:   return "network is unreachable";
+    case ENOBUFS:       return "no free buffers";
+    case ENODEV:        return "device doesn't exist";
+    case ENOENT:        return "file doesn't exist";
+    case ENOEXEC:       return "executable format error";
+    case ENOLCK:        return "no free locks";
+    case ENOLINK:       return "reserved";
+    case ENOMEM:        return "no free memory";
+    case ENOMSG:        return "no message of desired type";
+    case ENOPROTOOPT:   return "protocol not implemented";
+    case ENOSPC:        return "no free storage";
+    case ENOSYS:        return "function is not implemented";
+    case ENOTCONN:      return "socket is not connected";
+    case ENOTEMPTY:     return "directory is not empty";
+    case ENOTRECOVERABLE:
+        return "unrecoverable error";
+    case ENOTSOCK:      return "not a socket";
+    case ENOTSUP:       return "operation not supported";
+    case ENOTTY:        return "inappropriate I/O control operation";
+    case ENXIO:         return "no such I/O device or address";
+    case EOVERFLOW:     return "overflow";
+    case EPERM:         return "permission denied";
+    case EPIPE:         return "broken pipe";
+    case EPROTO:        return "protocol error";
+    case EPROTONOSUPPORT:
+        return "protocol not supported";
+    case EPROTOTYPE:    return "invalid protocol type";
+    case ERANGE:        return "result is out of range";
+    case EROFS:         return "read-only file system";
+    case ESPIPE:        return "invalid seek";
+    case ESRCH:         return "process doesn't exist";
+    case ESTALE:        return "reserved";
+    case ETIMEDOUT:     return "connection timeout";
+    case ETXTBSY:       return "text file is busy";
+    case EWOULDBLOCK:   return "operation is blocked";
+    case EXDEV:         return "cross-device link";
+    default:
+        errno = EINVAL;
+        return "undefined error code";
+    }
 }
