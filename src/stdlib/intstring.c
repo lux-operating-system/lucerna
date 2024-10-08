@@ -5,6 +5,7 @@
 
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 
 char *itoa(int n, char *buffer, int radix) {
     return ltoa((long)n, buffer, radix);
@@ -104,6 +105,9 @@ char *ultoa(unsigned long n, char *buffer, int radix) {
 }
 
 long atol(const char *s) {
+    if(s[0] == '-' && strlen(s) > 1)
+        return -1 * atol(s+1);
+
     long v = 0;
     int len = 0;
 
