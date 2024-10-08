@@ -12,7 +12,7 @@ char *itoa(int n, char *buffer, int radix) {
 }
 
 int atoi(const char *s) {
-    return (long)atol(s);
+    return (int) atol(s);
 }
 
 char *uitoa(unsigned int n, char *buffer, int radix) {
@@ -105,10 +105,14 @@ char *ultoa(unsigned long n, char *buffer, int radix) {
 }
 
 long atol(const char *s) {
-    if(s[0] == '-' && strlen(s) > 1)
-        return -1 * atol(s+1);
+    return (long) atoll(s);
+}
 
-    long v = 0;
+long long atoll(const char *s) {
+    if(s[0] == '-' && strlen(s) > 1)
+        return -1 * atoll(s+1);
+
+    long long v = 0;
     int len = 0;
 
     while(s[len] >= '0' && s[len] <= '9') {
@@ -118,13 +122,13 @@ long atol(const char *s) {
     if(!len) return 0;
     if(len == 1) return (long)(s[0] - '0');
 
-    long multiplier = 1;
+    long long multiplier = 1;
     for(int i = 1; i < len; i++) {
         multiplier *= 10;
     }
 
     for(int i = 0; i < len; i++) {
-        long digit = s[i] - '0';
+        long long digit = s[i] - '0';
         v += (digit * multiplier);
         multiplier /= 10;
     }

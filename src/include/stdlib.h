@@ -22,6 +22,7 @@ int atoi(const char *);
 char *ltoa(long, char *, int);
 char *ultoa(unsigned long, char *, int);
 long atol(const char *);
+long long atoll(const char *);
 void exit(int);
 void abort(void);
 
