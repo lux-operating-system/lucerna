@@ -96,9 +96,25 @@ int vsprintf(char *dst, const char *f, va_list args) {
                         if(dst) strcpy(&dst[l], buffer);
                         l += numberLength;
                         break;
+                    case 'u':
+                        number = va_arg(args, int64_t);
+                        ultoa(number, buffer, DECIMAL);
+
+                        numberLength = strlen(buffer);
+                        if(numberLength < paddingLength) {
+                            for(int i = 0; i < (paddingLength-numberLength); i++) {
+                                if(dst) dst[l] = paddingCharacter;
+                                l++;
+                            }
+                        }
+
+                        if(dst) strcpy(&dst[l], buffer);
+                        l+= numberLength;
+                        break;
+
                     case 'x':
                         number = va_arg(args, uint64_t);
-                        ltoa(number, buffer, HEX);
+                        ultoa((uint64_t) number, buffer, HEX);
 
                         numberLength = strlen(buffer);
                         if(numberLength < paddingLength) {
@@ -113,7 +129,7 @@ int vsprintf(char *dst, const char *f, va_list args) {
                         break;
                     case 'X':
                         number = va_arg(args, uint64_t);
-                        ltoa(number, buffer, HEX);
+                        ultoa(number, buffer, HEX);
 
                         numberLength = strlen(buffer);
                         if(numberLength < paddingLength) {
