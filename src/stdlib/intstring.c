@@ -14,6 +14,10 @@ int atoi(const char *s) {
     return (long)atol(s);
 }
 
+char *uitoa(unsigned int n, char *buffer, int radix) {
+    return ultoa((unsigned long)n, buffer, radix);
+}
+
 char *ltoa(long n, char *buffer, int radix) {
     if(!radix || radix > HEX) return NULL;
 
@@ -44,6 +48,45 @@ char *ltoa(long n, char *buffer, int radix) {
 
         length++;
         un /= radix;
+    }
+
+    buffer[length] = 0;   // null terminator
+
+    // now reverse the string
+    if(length >= 2) {
+        for(int i = 0; i < length/2; i++) {
+            char tmp = buffer[i];
+            buffer[i] = buffer[length-i-1];
+            buffer[length-i-1] = tmp;
+        }
+    }
+
+    return buffer;
+}
+
+char *ultoa(unsigned long n, char *buffer, int radix) {
+    if(!radix || radix > HEX) return NULL;
+
+    if(!n) {
+        buffer[0] = '0';
+        buffer[1] = 0;
+        return buffer;
+    }
+
+    int length = 0;
+
+    while(n) {
+        // convert digit by digit and then reverse the string
+        unsigned long digit = n % radix;
+
+        if(digit >= 10) {
+            buffer[length] = 'a' + digit - 10;
+        } else {
+            buffer[length] = '0' + digit;
+        }
+
+        length++;
+        n /= radix;
     }
 
     buffer[length] = 0;   // null terminator

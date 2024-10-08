@@ -17,10 +17,11 @@ void *calloc(size_t, size_t);
 void *realloc(void *, size_t);
 
 char *itoa(int, char *, int);
+char *uitoa(unsigned int, char *, int);
 int atoi(const char *);
 char *ltoa(long, char *, int);
+char *ultoa(unsigned long, char *, int);
 long atol(const char *);
-
 void exit(int);
 void abort(void);
 
