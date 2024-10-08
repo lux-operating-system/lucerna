@@ -23,6 +23,11 @@ char *ltoa(long n, char *buffer, int radix) {
         return buffer;
     }
 
+    if(n < 0 && radix == DECIMAL) {
+        buffer[0] = '-';
+        return ltoa(-1 * n, buffer+1, DECIMAL);
+    }
+
     int length = 0;
 
     uint64_t un = (uint64_t)n;
