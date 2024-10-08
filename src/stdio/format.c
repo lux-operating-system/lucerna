@@ -19,7 +19,7 @@ int vsprintf(char *dst, const char *f, va_list args) {
     bool formatter = false;
     char format[16];
     char buffer[40];
-    uint64_t number;
+    int64_t number;
     int formatIndex;
     int numberLength, paddingLength;
     char paddingCharacter;
@@ -70,15 +70,26 @@ int vsprintf(char *dst, const char *f, va_list args) {
                         break;
                     case 'd':
                     case 'i':
-                    case 'u':
-                        number = va_arg(args, uint64_t);
+                        number = va_arg(args, int64_t);
                         ltoa(number, buffer, DECIMAL);
 
                         numberLength = strlen(buffer);
                         if(numberLength < paddingLength) {
-                            for(int i = 0; i < (paddingLength-numberLength); i++) {
-                                if(dst) dst[l] = paddingCharacter;
+                            if(number >= 0 || paddingCharacter == ' ') {
+                                for(int i = 0; i < (paddingLength-numberLength); i++) {
+                                    if(dst) dst[l] = paddingCharacter;
+                                    l++;
+                                }
+                            } else {
+                                // negative numbers with a non-whitespace pad
+                                memmove(buffer, buffer+1, strlen(buffer));
+                                if(dst) dst[l] = '-';
                                 l++;
+
+                                for(int i = 0; i < (paddingLength-numberLength); i++) {
+                                    if(dst) dst[l] = paddingCharacter;
+                                    l++;
+                                }
                             }
                         }
                         
