@@ -42,7 +42,7 @@ int vsprintf(char *dst, const char *f, va_list args) {
                 format[formatIndex] = *f;
                 formatIndex++;
 
-                if(*f >= 'A' && *f <= 'z') {
+                if(*f >= 'A' && *f <= 'z' && *f != 'l') {
                     formatter = false;
 
                     // parse the format
