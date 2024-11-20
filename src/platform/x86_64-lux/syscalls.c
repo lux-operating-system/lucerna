@@ -13,6 +13,7 @@
 #include <limits.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <signal.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
@@ -342,6 +343,28 @@ int kill(pid_t pid, int signum) {
     }
 
     return 0;
+}
+
+int sigaction(int sig, const struct sigaction *act, struct sigaction *oact) {
+    int status = (int) luxSyscall(SYSCALL_SIGACTION, sig, (uint64_t) act, (uint64_t) oact, 0);
+    if(status) {
+        errno = -1*status;
+        return -1;
+    }
+
+    return 0;
+}
+
+void (*signal(int sig, void (*func)(int)))(int) {
+    struct sigaction act, oact;
+    sigemptyset(&act.sa_mask);
+    act.sa_flags = 0;
+    act.sa_handler = func;
+
+    int status = sigaction(sig, &act, &oact);
+
+    if(status) return SIG_ERR;
+    else return oact.sa_handler;
 }
 
 /* Group 4: Memory Management */
