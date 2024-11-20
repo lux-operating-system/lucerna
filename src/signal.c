@@ -87,3 +87,13 @@ int sigismember(sigset_t *set, int signum) {
 int raise(int sig) {
     return kill(gettid(), sig);
 }
+
+/* bsd_signal(): identical to signal() and provided only for POSIX completion
+ * params: sig - signal to configure
+ * params: func - signal handler
+ * returns: previous signal handler or SIG_ERR on fail
+ */
+
+void (*bsd_signal(int sig, void (*func)(int)))(int) {
+    return signal(sig, func);
+}
