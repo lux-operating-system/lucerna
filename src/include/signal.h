@@ -98,5 +98,6 @@ int sigdelset(sigset_t *, int);
 int sigismember(sigset_t *, int);
 
 int kill(pid_t, int);
+int raise(int);
 void (*signal(int, void (*)(int)))(int);
 int sigaction(int, const struct sigaction *, struct sigaction *);

@@ -5,6 +5,7 @@
 
 #include <signal.h>
 #include <errno.h>
+#include <unistd.h>
 
 /* sigemptyset(): clears a set of signals
  * params: set - set of signals
@@ -76,4 +77,13 @@ int sigismember(sigset_t *set, int signum) {
 
     if(*set & (1 << signum)) return 1;
     else return 0;
+}
+
+/* raise(): raises a signal to the calling thread
+ * params: sig - signal to raise
+ * returns: zero on success
+ */
+
+int raise(int sig) {
+    return kill(gettid(), sig);
 }
