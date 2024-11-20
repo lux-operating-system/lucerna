@@ -334,7 +334,15 @@ ssize_t send(int sd, const void *buffer, size_t len, int flags) {
     }
 }
 
-// TODO: kill()
+int kill(pid_t pid, int signum) {
+    int status = (int) luxSyscall(SYSCALL_KILL, pid, signum, 0, 0);
+    if(status) {
+        errno = -1*status;
+        return -1;
+    }
+
+    return 0;
+}
 
 /* Group 4: Memory Management */
 
