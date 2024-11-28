@@ -10,7 +10,7 @@
 #include <errno.h>
 #include <sys/ioctl.h>
 #include <stdio.h>
-#include <fnctl.h>
+#include <fcntl.h>
 
 /* ioctl commands here are specific to the luxOS pty driver and will not work
  * on any other terminal implementation */
