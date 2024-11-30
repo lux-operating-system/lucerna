@@ -27,6 +27,14 @@ int vfprintf(FILE *, const char *, va_list);
 int fprintf(FILE *, const char *, ...);
 int vprintf(const char *, va_list);
 int printf(const char *, ...);
+
+int vsscanf(const char *, const char *, va_list);
+int vfscanf(FILE *, const char *, va_list);
+int vscanf(const char *, va_list);
+int sscanf(const char *, const char *, ...);
+int fscanf(FILE *, const char *, ...);
+int scanf(const char *, ...);
+
 int puts(const char *);
 int fputs(const char *, FILE *);
 int fputc(int, FILE *);
