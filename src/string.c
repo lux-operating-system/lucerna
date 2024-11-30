@@ -208,3 +208,25 @@ char *strerror(int error) {
         return "undefined error code";
     }
 }
+
+char *strchr(const char *s, int c) {
+    while(*s) {
+        if(*s == c) return s;
+        s++;
+    }
+
+    return NULL;
+}
+
+char *strrchr(const char *s, int c) {
+    size_t len = strlen(s);
+    const char *ptr = s + len;
+
+    while(len) {
+        if(*ptr == c) return ptr;
+        len--;
+        ptr--;
+    }
+
+    return NULL;
+}

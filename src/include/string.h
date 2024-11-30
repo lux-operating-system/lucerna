@@ -19,3 +19,5 @@ int strncmp(const char *, const char *);
 char *strtok(char *, const char *);
 char *strtok_r(char *, const char *, char **);
 char *strerror(int);
+char *strchr(const char *, int);
+char *strrchr(const char *, int);
