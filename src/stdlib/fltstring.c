@@ -7,6 +7,7 @@
 #include <errno.h>
 #include <math.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 long double strtold(const char *nptr, char **endptr) {
     const char *s = nptr;
@@ -86,4 +87,8 @@ double strtod(const char *nptr, char **endptr) {
 
 float strtof(const char *nptr, char **endptr) {
     return (float) strtold(nptr, endptr);
+}
+
+double atof(const char *str) {
+    return strtod(str, NULL);
 }

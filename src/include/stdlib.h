@@ -28,6 +28,8 @@ double strtod(const char *, char **);
 float strtof(const char *, char **);
 long double strtold(const char *, char **);
 
+double atof(const char *);
+
 void exit(int);
 void abort(void);
 
