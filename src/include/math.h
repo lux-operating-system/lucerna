@@ -49,3 +49,25 @@ typedef long double double_t;
 #define M_2_SQRTPI              ((double) 1.12837916709551257390)
 #define M_SQRT2                 ((double) 1.41421356237309504880)
 #define M_SQRT1_2               ((double) 0.70710678118654752440)
+
+#define HUGE_VAL                ((double) 9999999999999999999999)
+#define HUGE_VALF               ((float) 9999999999999)
+#define HUGE_VALL               ((long double) HUGE_VAL)
+#define INFINITY                HUGE_VALF
+#define NAN                     INFINITY
+
+double exp(double);
+float expf(float);
+long double expl(long double);
+
+double pow(double, double);
+float powf(float, float);
+long double powl(long double, long double);
+
+double log(double);
+float logf(float);
+long double logl(long double);
+
+double log10(double);
+float log10f(float);
+long double log10l(long double);
