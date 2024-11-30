@@ -178,6 +178,12 @@ off_t lseek(int fd, off_t offset, int where) {
     return status;
 }
 
+int mkdir(const char *path, mode_t mode) {
+    /* TODO */
+    errno = ENOSYS;
+    return -1;
+}
+
 int chdir(const char *path) {
     int status = (int) luxSyscall(SYSCALL_CHDIR, (uint64_t)path, 0, 0, 0);
     if(status < 0) {
