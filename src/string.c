@@ -4,6 +4,7 @@
  */
 
 #include <string.h>
+#include <stdlib.h>
 #include <stdint.h>
 #include <errno.h>
 
@@ -229,4 +230,14 @@ char *strrchr(const char *s, int c) {
     }
 
     return NULL;
+}
+
+char *strdup(const char *s) {
+    char *newptr = malloc(strlen(s) + 1);
+    if(!newptr) {
+        errno = ENOMEM;
+        return NULL;
+    }
+
+    return strcpy(newptr, s);
 }
