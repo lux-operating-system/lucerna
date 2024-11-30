@@ -57,3 +57,4 @@ struct stat {
 
 int stat(const char *, struct stat *);
 int fstat(int, struct stat *);
+int mkdir(const char *, mode_t);
