@@ -42,7 +42,7 @@ long double logl(long double x) {
         z *= z2;
     }
 
-    return result;
+    return result * 2.0;
 }
 
 float logf(float x) {
@@ -51,4 +51,30 @@ float logf(float x) {
 
 double log(double x) {
     return (double) logl((long double) x);
+}
+
+long double powl(long double x, long double y) {
+    if(x == 0.0 && y == 0.0) return 1.0;
+
+    if(x == 0.0) {
+        if(y > 0.0) return 0;
+        return INFINITY;
+    }
+
+    if(y == 0.0) return 1.0;
+
+    if(x < 0.0 && (y != (int)y)) {
+        errno = EDOM;   // negative x^y is only defined when y is an integer
+        return NAN;
+    }
+
+    return exp(y * log(x));
+}
+
+float powf(float x, float y) {
+    return (float) powl((long double) x, (long double) y);
+}
+
+double pow(double x, double y) {
+    return (double) powl((long double) x, (long double) y);
 }
