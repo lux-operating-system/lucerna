@@ -80,6 +80,16 @@ search:
                 // found a free block
                 if(!hdr->next) hdr->next = n + sizeof(struct mallocHeader);
 
+                if((position + sizeof(struct mallocHeader) + n) > dataSegmentSize) {
+                    ptr = sbrk(increment);
+                    if(ptr == (void *) -1) {
+                        errno = ENOMEM;
+                        return NULL;
+                    }
+
+                    dataSegmentSize += increment;
+                }
+
                 hdr->valid = 1;
                 ptr = (void *)((uintptr_t)hdr + sizeof(struct mallocHeader));
                 return ptr;
