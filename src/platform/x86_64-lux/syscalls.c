@@ -18,6 +18,7 @@
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/ioctl.h>
+#include <sys/mman.h>
 #include <sys/lux/lux.h>
 #include "syscalls.h"
 
@@ -369,8 +370,37 @@ void (*signal(int sig, void (*func)(int)))(int) {
 
 /* Group 4: Memory Management */
 
+struct MmapSyscallParams {
+    // probably the only syscall whose params will be passed in memory because
+    // there's just too many
+    void *addr;
+    size_t len;
+    int prot;
+    int flags;
+    int fd;
+    off_t off;
+};
+
 void *sbrk(intptr_t delta) {
     return (void *)luxSyscall(SYSCALL_SBRK, (uint64_t)delta, 0, 0, 0);
+}
+
+void *mmap(void *addr, size_t len, int prot, int flags, int fd, off_t off) {
+    struct MmapSyscallParams p;
+    p.addr = addr;
+    p.len = len;
+    p.prot = prot;
+    p.flags = flags;
+    p.fd = fd;
+    p.off = off;
+
+    intptr_t ptr = (intptr_t) luxSyscall(SYSCALL_MMAP, (uint64_t) &p, 0, 0, 0);
+    if(ptr < 0) {
+        errno = -1 * ptr;
+        return MAP_FAILED;
+    }
+
+    return (void *) ptr;
 }
 
 /* Group 5: Driver I/O Functions */
