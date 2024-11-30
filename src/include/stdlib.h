@@ -31,3 +31,5 @@ char *ptsname(int);
 int ptsname_r(int, char *, size_t);
 int grantpt(int);
 int unlockpt(int);
+
+int abs(int);
