@@ -22,6 +22,8 @@ typedef double double_t;
 typedef long double float_t;
 typedef long double double_t;
 #endif
+#endif
+#endif
 
 #define isnan(x)                (x != x)
 #define isunordered(x, y)       (isnan(x) || isnan(y))
