@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <errno.h>
 
 #define BRK_INCREMENTS      4096
 
@@ -38,7 +39,10 @@ void *malloc(size_t n) {
     if(!programBreak || !dataSegmentSize) {
         // for the initial allocation
         ptr = sbrk(increment);
-        if(ptr == (void *) -1) return NULL;
+        if(ptr == (void *) -1) {
+            errno = ENOMEM;
+            return NULL;
+        }
 
         programBreak = ptr;
         dataSegmentSize += increment;
@@ -89,7 +93,10 @@ search:
 
     // if we make it here then we didn't find a free block, to try to allocate more memory
     ptr = sbrk(increment);
-    if(ptr == (void *)-1) return NULL;  // system is out of memory
+    if(ptr == (void *)-1) {
+        errno = ENOMEM;
+        return NULL;
+    }
 
     hdr = (struct mallocHeader *) ptr;
     hdr->next = 0;
