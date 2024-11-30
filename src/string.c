@@ -69,6 +69,21 @@ int strcmp(const char *s1, const char *s2) {
     return *s1 - *s2;
 }
 
+int strncmp(const char *s1, const char *s2, size_t n) {
+    size_t count = 0;
+
+    while(*s1 == *s2) {
+        if(!*s1) return 0;
+
+        s1++;
+        s2++;
+        count++;
+        if(count >= n) return 0;
+    }
+
+    return *s1 - *s2;
+}
+
 int memcmp(const void *d1, const void *d2, size_t n) {
     if(!n) return 0;
     uint8_t *d1c = (uint8_t *)d1;

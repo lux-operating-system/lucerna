@@ -15,7 +15,7 @@ size_t strlen(const char *);
 char *strcpy(char *, const char *);
 char *strncpy(char *, const char *, size_t);
 int strcmp(const char *, const char *);
-int strncmp(const char *, const char *);
+int strncmp(const char *, const char *, size_t);
 char *strtok(char *, const char *);
 char *strtok_r(char *, const char *, char **);
 char *strerror(int);
