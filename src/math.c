@@ -78,3 +78,27 @@ float powf(float x, float y) {
 double pow(double x, double y) {
     return (double) powl((long double) x, (long double) y);
 }
+
+double fabs(double x) {
+    if(x == INFINITY) return INFINITY;
+    if(x == NAN) return NAN;
+
+    if(x < 0.0) return -1.0 * x;
+    return x;
+}
+
+float fabsf(float x) {
+    if(x == INFINITY) return INFINITY;
+    if(x == NAN) return NAN;
+
+    if(x < 0.0) return -1.0 * x;
+    return x;
+}
+
+long double fabsl(long double x) {
+    if(x == INFINITY) return INFINITY;
+    if(x == NAN) return NAN;
+
+    if(x < 0.0) return -1.0 * x;
+    return x;
+}

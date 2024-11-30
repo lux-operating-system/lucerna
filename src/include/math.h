@@ -71,3 +71,7 @@ long double logl(long double);
 double log10(double);
 float log10f(float);
 long double log10l(long double);
+
+double fabs(double);
+float fabsf(float);
+long double fabsl(long double);
