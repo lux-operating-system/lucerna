@@ -231,6 +231,10 @@ void clearerr(FILE *f) {
     f->error = 0;
 }
 
+int fflush(FILE *f) {
+    return 0; /* TODO */
+}
+
 /* TODO: remove() and rename() after implementing link(), unlink(), and rmdir()
  * syscalls */
 

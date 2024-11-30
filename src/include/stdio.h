@@ -40,6 +40,7 @@ size_t fwrite(const void *, size_t, size_t, FILE *);
 size_t fread(void *, size_t, size_t, FILE *);
 ssize_t getdelim(char **, size_t *, int, FILE *);
 ssize_t getline(char **, size_t *, FILE *);
+int fflush(FILE *);
 
 FILE *fopen(const char *, const char *);
 int fclose(FILE *);
