@@ -166,6 +166,10 @@ int vsscanf(const char *s, const char *f, va_list args) {
     return matches;
 }
 
-int vfscanf(FILE *file, const char *fmt, va_list args) {
-
+int sscanf(const char *s, const char *f, ...) {
+    va_list args;
+    va_start(args, f);
+    int status = vsscanf(s, f, args);
+    va_end(args);
+    return status;
 }
