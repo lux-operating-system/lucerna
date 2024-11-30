@@ -230,3 +230,16 @@ void clearerr(FILE *f) {
     f->eof = 0;
     f->error = 0;
 }
+
+/* TODO: remove() and rename() after implementing link(), unlink(), and rmdir()
+ * syscalls */
+
+int remove(const char *path) {
+    errno = ENOSYS;
+    return -1;
+}
+
+int rename(const char *old, const char *new) {
+    errno = ENOSYS;
+    return -1;
+}

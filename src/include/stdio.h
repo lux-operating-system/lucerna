@@ -49,3 +49,6 @@ int fileno(FILE *);
 void clearerr(FILE *);
 
 void perror(const char *);
+
+int remove(const char *);
+int rename(const char *, const char *);
