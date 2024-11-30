@@ -22,3 +22,4 @@ char *strerror(int);
 char *strchr(const char *, int);
 char *strrchr(const char *, int);
 char *strdup(const char *);
+char *strstr(const char *, const char *);

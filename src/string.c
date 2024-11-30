@@ -227,7 +227,7 @@ char *strerror(int error) {
 
 char *strchr(const char *s, int c) {
     while(*s) {
-        if(*s == c) return s;
+        if(*s == c) return (char *) s;
         s++;
     }
 
@@ -239,7 +239,7 @@ char *strrchr(const char *s, int c) {
     const char *ptr = s + len;
 
     while(len) {
-        if(*ptr == c) return ptr;
+        if(*ptr == c) return (char *) ptr;
         len--;
         ptr--;
     }
@@ -255,4 +255,18 @@ char *strdup(const char *s) {
     }
 
     return strcpy(newptr, s);
+}
+
+char *strstr(const char *s1, const char *s2) {
+    // search for s2 in s1
+    size_t len1 = strlen(s1);
+    size_t len2 = strlen(s2);
+
+    if(!len2) return (char *) s1;
+
+    for(size_t i = 0; i < len1-len2+1; i++) {
+        if(!memcmp(s1+i, s2, len2)) return (char *) s1 + i;
+    }
+
+    return NULL;
 }
