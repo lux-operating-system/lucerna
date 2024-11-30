@@ -33,3 +33,5 @@ int grantpt(int);
 int unlockpt(int);
 
 int abs(int);
+
+int system(const char *);
