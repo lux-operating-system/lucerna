@@ -23,6 +23,11 @@ char *ltoa(long, char *, int);
 char *ultoa(unsigned long, char *, int);
 long atol(const char *);
 long long atoll(const char *);
+
+double strtod(const char *, char **);
+float strtof(const char *, char **);
+long double strtold(const char *, char **);
+
 void exit(int);
 void abort(void);
 
