@@ -20,6 +20,8 @@
 #define MS_SYNC                 0x02
 #define MS_INVALIDATE           0x04
 
+#define MAP_FAILED              ((void *) -1)
+
 void *mmap(void *, size_t, int, int, int, off_t);
 int munmap(void *, size_t);
 int msync(void *, size_t, int);
