@@ -13,4 +13,5 @@
 #define CHAR_MAX        255
 #define CHAR_MIN        0
 
+#define INT_MIN         0
 #define INT_MAX         2147483647
