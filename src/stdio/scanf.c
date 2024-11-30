@@ -5,6 +5,7 @@
 
 #include <errno.h>
 #include <ctype.h>
+#include <stdio.h>
 #include <stdint.h>
 #include <string.h>
 #include <stdarg.h>
@@ -56,109 +57,115 @@ int vsscanf(const char *s, const char *f, va_list args) {
         while(isspace(*s)) s++;
         if(!*s) return matches;
 
-        switch(*f) {
-        case 'm':
-            allocate = true;
-            f++;
-            break;
-        
-        case 'l':
-            if(l) ll = true;
-            else l = true;
-            f++;
-            break;
+        if(formatter) {
+            switch(*f) {
+            case 'm':
+                allocate = true;
+                f++;
+                break;
+            
+            case 'l':
+                if(l) ll = true;
+                else l = true;
+                f++;
+                break;
 
-        case 'd':
-        case 'i':
-        case 'u':
-            formatter = false;
+            case 'd':
+            case 'i':
+            case 'u':
+                formatter = false;
 
-            if(allocate) {
-                if(ll) ptr = malloc(sizeof(long long));
-                else if(l) ptr = malloc(sizeof(long));
-                else ptr = malloc(sizeof(int));
+                if(allocate) {
+                    if(ll) ptr = malloc(sizeof(long long));
+                    else if(l) ptr = malloc(sizeof(long));
+                    else ptr = malloc(sizeof(int));
 
-                if(!ptr) {
-                    errno = ENOMEM;
-                    return matches;
-                }
+                    if(!ptr) {
+                        errno = ENOMEM;
+                        return matches;
+                    }
 
-                if(ll) {
-                    llongptr = va_arg(args, long long **);
-                    *llongptr = (long long *) ptr;
-                    **llongptr = atoll(s);
-                } else if(l) {
-                    longptr = va_arg(args, long **);
-                    *longptr = (long *) ptr;
-                    **longptr = atol(s);
+                    if(ll) {
+                        llongptr = va_arg(args, long long **);
+                        *llongptr = (long long *) ptr;
+                        **llongptr = atoll(s);
+                    } else if(l) {
+                        longptr = va_arg(args, long **);
+                        *longptr = (long *) ptr;
+                        **longptr = atol(s);
+                    } else {
+                        intptr = va_arg(args, int **);
+                        *intptr = (int *) ptr;
+                        **intptr = atoi(s);
+                    }
                 } else {
-                    intptr = va_arg(args, int **);
-                    *intptr = (int *) ptr;
-                    **intptr = atoi(s);
+                    if(ll) {
+                        llongv = va_arg(args, long long *);
+                        *llongv = atoll(s);
+                    } else if(l) {
+                        longv = va_arg(args, long *);
+                        *longv = atol(s);
+                    } else {
+                        integer = va_arg(args, int *);
+                        *integer = atoi(s);
+                    }
                 }
-            } else {
-                if(ll) {
-                    llongv = va_arg(args, long long *);
-                    *llongv = atoll(s);
-                } else if(l) {
-                    longv = va_arg(args, long *);
-                    *longv = atol(s);
+
+                while(isdigit(*s)) s++;
+                if(!*s) return matches;
+                break;
+            
+            case 'x':
+            case 'X':
+                formatter = false;
+                uint64_t hex = hex2int(s);
+
+                if(allocate) {
+                    if(ll) ptr = malloc(sizeof(long long));
+                    else if(l) ptr = malloc(sizeof(long));
+                    else ptr = malloc(sizeof(int));
+
+                    if(!ptr) {
+                        errno = ENOMEM;
+                        return matches;
+                    }
+
+                    if(ll) {
+                        llongptr = va_arg(args, long long **);
+                        *llongptr = (long long *) ptr;
+                        **llongptr = hex;
+                    } else if(l) {
+                        longptr = va_arg(args, long **);
+                        *longptr = (long *) ptr;
+                        **longptr = hex;
+                    } else {
+                        intptr = va_arg(args, int **);
+                        *intptr = (int *) ptr;
+                        **intptr = hex;
+                    }
                 } else {
-                    integer = va_arg(args, int *);
-                    *integer = atoi(s);
+                    if(ll) {
+                        llongv = va_arg(args, long long *);
+                        *llongv = hex;
+                    } else if(l) {
+                        longv = va_arg(args, long *);
+                        *longv = hex;
+                    } else {
+                        integer = va_arg(args, int *);
+                        *integer = hex;
+                    }
                 }
+
+                while(isxdigit(*s)) s++;
+                if(!*s) return matches;
+                break;
             }
-
-            while(isdigit(*s)) s++;
-            if(!*s) return matches;
-            break;
-        
-        case 'x':
-        case 'X':
-            formatter = false;
-            uint64_t hex = hex2int(s);
-
-            if(allocate) {
-                if(ll) ptr = malloc(sizeof(long long));
-                else if(l) ptr = malloc(sizeof(long));
-                else ptr = malloc(sizeof(int));
-
-                if(!ptr) {
-                    errno = ENOMEM;
-                    return matches;
-                }
-
-                if(ll) {
-                    llongptr = va_arg(args, long long **);
-                    *llongptr = (long long *) ptr;
-                    **llongptr = hex;
-                } else if(l) {
-                    longptr = va_arg(args, long **);
-                    *longptr = (long *) ptr;
-                    **longptr = hex;
-                } else {
-                    intptr = va_arg(args, int **);
-                    *intptr = (int *) ptr;
-                    **intptr = hex;
-                }
-            } else {
-                if(ll) {
-                    llongv = va_arg(args, long long *);
-                    *llongv = hex;
-                } else if(l) {
-                    longv = va_arg(args, long *);
-                    *longv = hex;
-                } else {
-                    integer = va_arg(args, int *);
-                    *integer = hex;
-                }
-            }
-
-            while(isxdigit(*s)) s++;
-            if(!*s) return matches;
-            break;
         }
     }
 
     return matches;
+}
+
+int vfscanf(FILE *file, const char *fmt, va_list args) {
+
 }
