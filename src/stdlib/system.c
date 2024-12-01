@@ -8,18 +8,27 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-int system(const char *command) {
-    if(!command) return 1;
+int system(const char *c) {
+    if(!c) return 1;
+
+    char *command = strdup(c);
+    if(!command) return -1;
 
     int argc = 0;
     char **argv = NULL;
     char *token = strtok(command, " \n");
     while(token) {
         argv = realloc(argv, (argc+1) * sizeof(char *));
-        if(!argv) return -1;
+        if(!argv) {
+            free(command);
+            return -1;
+        }
 
         argv[argc] = malloc(strlen(token) + 1);
-        if(!argv[argc]) return -1;
+        if(!argv[argc]) {
+            free(command);
+            return -1;
+        }
 
         strcpy(argv[argc], token);
 
@@ -29,6 +38,7 @@ int system(const char *command) {
 
     if(!argc) {
         free(argv);
+        free(command);
         return 0;
     }
 
@@ -40,6 +50,7 @@ int system(const char *command) {
     pid_t child = fork();
     if(child < 0) {
         free(argv);
+        free(command);
         return -1;
     }
 
@@ -49,6 +60,7 @@ int system(const char *command) {
         exit(-1);
     } else {
         /* parent */
+        free(command);
         free(argv);
         int status;
         if(waitpid(child, &status, 0) != child) return -1;
