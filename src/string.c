@@ -50,14 +50,12 @@ char *strcpy(char *dst, const char *src) {
 }
 
 char *strncpy(char *dst, const char *src, size_t n) {
-    size_t len = strlen(src);
-    if(len < n) {
+    size_t len = strlen(src) + 1;
+    if(n > len) {
         strcpy(dst, src);
         return (char *) memset(dst + len, 0, n - len);
-    } else if(len == n) {
-        return (char *) memcpy(dst, src, n);
     } else {
-        return strcpy(dst, src);
+        return (char *) memcpy(dst, src, n);
     }
 }
 
