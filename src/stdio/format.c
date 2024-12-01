@@ -48,6 +48,9 @@ int vsprintf(char *dst, const char *f, va_list args) {
                     // parse the format
                     memset(buffer, 0, 40);
 
+                    if(format[0] == '.')
+                        format[0] = '0';
+
                     if(format[0] == '0') {
                         paddingCharacter = '0';
                     } else {
@@ -186,12 +189,12 @@ int vsnprintf(char *dst, size_t bufsz, const char *f, va_list args) {
             return -1;
         }
 
-        vsprintf(temp, f, args);
+        vsprintf(temp, f, argsCopy);
         memcpy(dst, temp, bufsz-1);
         dst[bufsz-1] = 0;
         free(temp);
 
-        return bufsz;
+        return len;
     }
 
     int s = vsprintf(dst, f, argsCopy);
