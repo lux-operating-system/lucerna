@@ -15,6 +15,8 @@
 typedef struct {
     int fd;
     int eof, error;
+    void *mmap;
+    off_t position;
 } FILE;
 
 extern FILE *stdin, *stdout, *stderr;
