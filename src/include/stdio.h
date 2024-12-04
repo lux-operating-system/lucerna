@@ -16,6 +16,7 @@ typedef struct {
     int fd;
     int eof, error;
     void *mmap;
+    size_t mmapLength;
     off_t position;
 } FILE;
 

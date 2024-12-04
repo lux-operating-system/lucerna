@@ -10,10 +10,11 @@
 #include <errno.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <sys/mman.h>
 
-static FILE _stdin = { .fd = STDIN_FILENO };
-static FILE _stdout = { .fd = STDOUT_FILENO };
-static FILE _stderr = { .fd = STDERR_FILENO };
+static FILE _stdin = { .fd = STDIN_FILENO, .mmap = NULL, .error = 0, .eof = 0 };
+static FILE _stdout = { .fd = STDOUT_FILENO, .mmap = NULL, .error = 0, .eof = 0 };
+static FILE _stderr = { .fd = STDERR_FILENO, .mmap = NULL, .error = 0, .eof = 0 };
 
 FILE *stdin = &_stdin;
 FILE *stdout = &_stdout;
@@ -55,7 +56,7 @@ FILE *fopen(const char *path, const char *mode) {
         return NULL;
     }
 
-    FILE *file = malloc(sizeof(FILE));
+    FILE *file = calloc(1, sizeof(FILE));
     if(!file) {
         errno = ENOMEM;
         return NULL;
@@ -67,19 +68,40 @@ FILE *fopen(const char *path, const char *mode) {
         return NULL;
     }
 
-    file->eof = 0;
-    file->error = 0;
+    struct stat st;
+    if(fstat(file->fd, &st) || (!S_ISREG(st.st_mode)))
+        return file;
+
+    int prot = 0;
+    if(numMode & O_RDWR) prot = PROT_READ | PROT_WRITE;
+    else if(numMode & O_RDONLY) prot = PROT_READ;
+    else if(numMode & O_WRONLY) prot = PROT_WRITE;
+
+    file->mmap = mmap(NULL, st.st_size, prot, MAP_SHARED, file->fd, 0);
+    if(file->mmap == MAP_FAILED) {
+        file->mmap = NULL;
+        return file;
+    }
+
+    file->mmapLength = st.st_size;
+    file->position = lseek(file->fd, 0, SEEK_CUR);
+    close(file->fd);
+    file->fd = -1;
     return file;
 }
 
 int fclose(FILE *file) {
-    int status = close(file->fd);
+    int status;
+    if(file->fd >= 0) status = close(file->fd);
+    else status = msync(file->mmap, file->mmapLength, MS_SYNC);
+
     if(status) return EOF;
     else return 0;
 }
 
 int feof(FILE *file) {
     if(file->eof) return 1;
+    if(file->mmap && (file->position >= file->mmapLength)) return 1;
 
     struct stat st;
     if(fstat(file->fd, &st)) return 1;
@@ -99,6 +121,17 @@ size_t fwrite(const void *buffer, size_t size, size_t count, FILE *f) {
     if(!s) return 0;
 
     clearerr(f);
+
+    if(f->mmap) {
+        size_t trueCount;
+        if((s + f->position) > f->mmapLength) trueCount = f->mmapLength - f->position;
+        else trueCount = s;
+        memcpy(f->mmap + f->position, buffer, trueCount);
+
+        f->position += trueCount;
+        return trueCount / size;
+    }
+
     ssize_t status = write(f->fd, buffer, s);
     if(status > 0) return status / size;
 
@@ -111,6 +144,17 @@ size_t fread(void *buffer, size_t size, size_t count, FILE *f) {
     if(!s) return 0;
 
     clearerr(f);
+
+    if(f->mmap) {
+        size_t trueCount;
+        if((s + f->position) > f->mmapLength) trueCount = f->mmapLength - f->position;
+        else trueCount = s;
+        memcpy(buffer, f->mmap + f->position, trueCount);
+
+        f->position += trueCount;
+        return trueCount / size;
+    }
+
     ssize_t status = read(f->fd, buffer, s);
     if(status > 0) return status / size;
 
@@ -209,12 +253,31 @@ ssize_t getline(char **lineptr, size_t *n, FILE *f) {
 }
 
 int fseek(FILE *f, long offset, int where) {
+    if(f->mmap) {
+        switch(where) {
+        case SEEK_CUR:
+            f->position += offset;
+            break;
+        case SEEK_SET:
+            f->position = offset;
+            break;
+        case SEEK_END:
+            f->position = f->mmapLength - offset;
+            break;
+        default:
+            f->error = EINVAL;
+            return -1;
+        }
+    }
+
     off_t s = lseek(f->fd, (off_t) offset, where);
     if(s < 0) return -1;
     return 0;
 }
 
 long ftell(FILE *f) {
+    if(f->mmap) return f->position;
+
     return (long) lseek(f->fd, 0, SEEK_CUR);
 }
 
