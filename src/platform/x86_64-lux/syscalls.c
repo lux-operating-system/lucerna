@@ -409,6 +409,10 @@ void *mmap(void *addr, size_t len, int prot, int flags, int fd, off_t off) {
     return (void *) ptr;
 }
 
+int msync(void *addr, size_t length, int flags) {
+    return 0;   /* TODO */
+}
+
 /* Group 5: Driver I/O Functions */
 
 int ioperm(uintptr_t base, uintptr_t count, int enable) {
