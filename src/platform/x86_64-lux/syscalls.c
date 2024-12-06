@@ -14,6 +14,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
+#include <time.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
@@ -80,6 +82,18 @@ uid_t getuid(void) {
 
 gid_t getgid(void) {
     return (gid_t) luxSyscall(SYSCALL_GETGID, 0, 0, 0, 0);
+}
+
+time_t time(time_t *tloc) {
+    *tloc = 0;
+    return 0;   /* TODO */
+}
+
+static struct tm local;
+
+struct tm *localtime(const time_t *timer) {
+    memset(&local, 0, sizeof(struct tm));   /* TODO */
+    return &local;
 }
 
 // TODO: setuid(), setgid()
