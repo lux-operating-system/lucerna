@@ -255,6 +255,31 @@ ssize_t getline(char **lineptr, size_t *n, FILE *f) {
     return getdelim(lineptr, n, '\n', f);
 }
 
+char *fgets(char *s, int n, FILE *f) {
+    int i = 0, c;
+    while((c = fgetc(f)) != EOF) {
+        s[i] = c;
+        if(c == '\n') {
+            s[i+1] = 0;
+            return s;
+        }
+
+        i++;
+        if(i >= (n-1)) {
+            s[i] = 0;
+            return s;
+        }
+    }
+
+    if(!i) {
+        f->eof = 1;
+        return NULL;
+    }
+    
+    s[i] = 0;
+    return s;
+}
+
 int fseek(FILE *f, long offset, int where) {
     if(f->mmap) {
         switch(where) {
