@@ -68,6 +68,7 @@ FILE *fopen(const char *path, const char *mode) {
         return NULL;
     }
 
+#ifdef STDIO_USE_MMAP
     struct stat st;
     if(fstat(file->fd, &st) || (!S_ISREG(st.st_mode)))
         return file;
@@ -87,6 +88,8 @@ FILE *fopen(const char *path, const char *mode) {
     file->position = lseek(file->fd, 0, SEEK_CUR);
     close(file->fd);
     file->fd = -1;
+#endif
+
     return file;
 }
 
