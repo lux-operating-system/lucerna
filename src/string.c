@@ -10,33 +10,6 @@
 
 /* String Manipulation Functions */
 
-void *memcpy(void *dst, const void *src, size_t n) {
-    if(!n) return dst;
-    uint8_t *dstc = (uint8_t *)dst;
-    uint8_t *srcc = (uint8_t *)src;
-
-    for(size_t i = 0; i < n; i++) {
-        dstc[i] = srcc[i];
-    }
-
-    return dst;
-}
-
-void *memmove(void *dst, const void *src, size_t n) {
-    if(!n) return dst;
-
-    // force volatile here so it only uses byte-by-byte accesses
-    // this is necessary for overlapping memory areas
-    uint8_t volatile *dstc = (uint8_t volatile *)dst;
-    uint8_t volatile *srcc = (uint8_t volatile *)src;
-
-    for(size_t i = 0; i < n; i++) {
-        dstc[i] = srcc[i];
-    }
-
-    return dst;
-}
-
 size_t strlen(const char *s) {
     size_t i = 0;
     for(; *s; i++) {
@@ -57,15 +30,6 @@ char *strncpy(char *dst, const char *src, size_t n) {
     } else {
         return (char *) memcpy(dst, src, n);
     }
-}
-
-void *memset(void *dst, int v, size_t n) {
-    if(!n) return dst;
-    uint8_t *dstc = (uint8_t *)dst;
-    for(size_t i = 0; i < n; i++) {
-        dstc[i] = v;
-    }
-    return dst;
 }
 
 int strcmp(const char *s1, const char *s2) {
