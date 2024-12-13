@@ -282,6 +282,7 @@ char *fgets(char *s, int n, FILE *f) {
 
 int fseek(FILE *f, long offset, int where) {
     if(f->mmap) {
+        off_t old = f->position;
         switch(where) {
         case SEEK_CUR:
             f->position += offset;
@@ -294,8 +295,17 @@ int fseek(FILE *f, long offset, int where) {
             break;
         default:
             f->error = EINVAL;
+            errno = EINVAL;
             return -1;
         }
+
+        if(f->position < 0 || f->position > f->mmapLength) {
+            f->position = old;
+            f->error = EINVAL;
+            return -1;
+        }
+
+        return 0;
     }
 
     off_t s = lseek(f->fd, (off_t) offset, where);
