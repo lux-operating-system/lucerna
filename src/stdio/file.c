@@ -201,6 +201,10 @@ int fgetc(FILE *f) {
     return getc(f);
 }
 
+int getchar(void) {
+    return getc(stdin);
+}
+
 ssize_t getdelim(char **lineptr, size_t *n, int delim, FILE *f) {
     if(!lineptr || !n) {
         errno = EINVAL;

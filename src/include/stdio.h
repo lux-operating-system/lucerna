@@ -45,6 +45,7 @@ int putc(int, FILE *);
 int putchar(int);
 int getc(FILE *);
 int fgetc(FILE *);
+int getchar(void);
 int feof(FILE *);
 int ferror(FILE *);
 size_t fwrite(const void *, size_t, size_t, FILE *);
