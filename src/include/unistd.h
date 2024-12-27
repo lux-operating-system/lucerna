@@ -19,7 +19,6 @@
 #define STDERR_FILENO           2
 
 extern char **environ;
-void exit(int);
 void _exit(int);
 pid_t fork(void);
 pid_t vfork(void);
