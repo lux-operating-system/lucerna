@@ -42,7 +42,7 @@ int vsprintf(char *dst, const char *f, va_list args) {
                 format[formatIndex] = *f;
                 formatIndex++;
 
-                if(*f >= 'A' && *f <= 'z' && *f != 'l') {
+                if(*f >= 'A' && *f <= 'z' && *f != 'l' && *f != 'z') {
                     formatter = false;
 
                     // parse the format
@@ -152,6 +152,29 @@ int vsprintf(char *dst, const char *f, va_list args) {
                             l++;
                         }
                         break;
+                    
+                    case 'p':
+                        number = va_arg(args, uintptr_t);
+                        ultoa(number, buffer, HEX);
+
+                        if(dst) {
+                            dst[l] = '0';
+                            dst[l+1] = 'x';
+                        }
+
+                        l += 2;
+
+                        for(int i = 0; i < strlen(buffer); i++) {
+                            if(buffer[i] >= 'a' && buffer[i] <= 'f') {
+                                if(dst) dst[l] = buffer[i] - 0x20;
+                            } else {
+                                if(dst) dst[l] = buffer[i];
+                            }
+
+                            l++;
+                        }
+                        break;
+
                     default:
                         if(dst) strcpy(&dst[l], format);
                         l += strlen(format);
