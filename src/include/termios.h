@@ -15,6 +15,7 @@ typedef unsigned long tcflag_t;
 
 struct termios {
     tcflag_t c_iflag, c_oflag, c_cflag, c_lflag;
+    speed_t c_ispeed, c_ospeed;
     cc_t c_cc[NCSS];
 };
 
