@@ -7,9 +7,12 @@
 
 #include <stddef.h>
 
-#define OCTAL       8
-#define DECIMAL     10
-#define HEX         16
+#define OCTAL           8
+#define DECIMAL         10
+#define HEX             16
+
+#define EXIT_SUCCESS    0
+#define EXIT_FAILURE    1
 
 void *malloc(size_t);
 void free(void *);
