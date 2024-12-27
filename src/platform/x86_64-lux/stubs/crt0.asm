@@ -49,8 +49,8 @@ _start:
     extern main         ; int main(int argc, char **argv, char **envp)
     call main           ; the env is obviously optional and probably should not be assumed to exist
 
+    extern exit         ; exit(int status) - to allow calling atexit() handlers
     mov rdi, rax        ; return value from main()
-    xor rax, rax
-    syscall             ; exit()
+    call exit
 
     jmp $               ; this is unreachable but just in case
