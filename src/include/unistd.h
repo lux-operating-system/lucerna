@@ -53,6 +53,7 @@ char *secure_getenv(const char *);
 
 char *ttyname(int);
 int ttyname_r(int, char *, size_t);
+int isatty(int);
 
 extern char *optarg;
 extern int optind, opterr, optopt;
