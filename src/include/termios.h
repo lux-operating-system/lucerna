@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <sys/types.h>      /* pid_t */
+
 #define NCSS                11
 
 typedef unsigned long cc_t;
