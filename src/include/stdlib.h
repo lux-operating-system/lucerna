@@ -31,6 +31,8 @@ long double strtold(const char *, char **);
 double atof(const char *);
 
 void exit(int);
+void _Exit(int);
+int atexit(void (*)(void));
 void abort(void);
 
 int posix_openpt(int);
