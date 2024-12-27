@@ -26,12 +26,8 @@
 
 /* Group 1: Processes, Threads, and Users */
 
-void exit(int status) {
-    luxSyscall(SYSCALL_EXIT, status, 0, 0, 0);
-}
-
 void _exit(int status) {
-    exit(status);
+    luxSyscall(SYSCALL_EXIT, status, 0, 0, 0);
 }
 
 pid_t fork(void) {
