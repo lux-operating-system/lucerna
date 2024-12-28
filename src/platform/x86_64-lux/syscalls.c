@@ -224,6 +224,21 @@ int mount(const char *src, const char *tgt, const char *type, int flags, void *d
     return status;
 }
 
+int fcntl(int fd, int cmd, ...) {
+    va_list args;
+    va_start(args, cmd);
+    uintptr_t next = va_arg(args, uintptr_t);
+
+    int status = (int) luxSyscall(SYSCALL_FCNTL, fd, cmd, next, 0);
+    if(status < 0) {
+        errno = -1*status;
+        status = -1;
+    }
+
+    va_end(args);
+    return status;
+}
+
 DIR *opendir(const char *path) {
     long status = (long) luxSyscall(SYSCALL_OPENDIR, (uint64_t)path, 0, 0, 0);
     if(status < 0) {
