@@ -5,9 +5,15 @@
 
 #pragma once
 
-#include <sys/types.h>
 #include <sys/stat.h>
 
+struct flock {
+    short l_type, l_whence;
+    off_t l_start, l_len;
+    pid_t l_pid;
+};
+
+/* open() flags */
 #define O_NONBLOCK              0x0001
 #define O_NDELAY                O_NONBLOCK
 #define O_CLOEXEC               0x0002
@@ -23,4 +29,26 @@
 #define O_SYNC                  0x0400
 #define O_TRUNC                 0x0800
 
+/* fcntl() commands */
+#define F_DUPFD                 1
+#define F_GETFD                 2
+#define F_SETFD                 3
+#define F_GETFL                 4
+#define F_SETFL                 5
+#define F_GETLK                 6
+#define F_SETLK                 7
+#define F_SETLKW                8
+#define F_GETOWN                9
+#define F_SETOWN                10
+
+/* fcntl() flags */
+#define FD_CLOEXEC              (O_CLOEXEC)
+
+/* file locks */
+#define F_UNLOCK                1
+#define F_RDLCK                 2
+#define F_WRLCK                 4
+
 int open(const char *, int, ...);
+int fcntl(int, int, ...);
+int creat(const char *, mode_t);
