@@ -8,6 +8,7 @@
 #define PATH_MAX        2048
 #define NAME_MAX        256
 #define TTY_NAME_MAX    128
+#define OPEN_MAX        1024
 
 #define CHAR_BIT        8
 #define CHAR_MAX        255
