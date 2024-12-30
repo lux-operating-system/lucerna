@@ -13,9 +13,9 @@
 #include <sys/stat.h>
 #include <sys/mman.h>
 
-static FILE _stdin = { .fd = STDIN_FILENO, .mmap = NULL, .error = 0, .eof = 0 };
-static FILE _stdout = { .fd = STDOUT_FILENO, .mmap = NULL, .error = 0, .eof = 0 };
-static FILE _stderr = { .fd = STDERR_FILENO, .mmap = NULL, .error = 0, .eof = 0 };
+static FILE _stdin = { .fd = STDIN_FILENO, .mmap = NULL, .error = 0, .eof = 0, .bufferType = _IOLBF, .bufferSize = 0 };
+static FILE _stdout = { .fd = STDOUT_FILENO, .mmap = NULL, .error = 0, .eof = 0, .bufferType = _IOLBF, .bufferSize = 0 };
+static FILE _stderr = { .fd = STDERR_FILENO, .mmap = NULL, .error = 0, .eof = 0, .bufferType = _IONBF, .bufferSize = 0 };
 
 FILE *stdin = &_stdin;
 FILE *stdout = &_stdout;
@@ -363,7 +363,35 @@ void clearerr(FILE *f) {
 }
 
 int fflush(FILE *f) {
-    return 0; /* TODO */
+    if(!_openFiles) {
+        _openFiles = calloc(OPEN_MAX, sizeof(FILE));
+        if(!_openFiles) {
+            errno = ENOMEM;
+            return EOF;
+        }
+
+        _openFiles[0] = stdin;
+        _openFiles[1] = stdout;
+        _openFiles[2] = stderr;
+    }
+
+    if(!f) {
+        for(int i = 0; i < OPEN_MAX; i++) {
+            if(_openFiles[i]) {
+                int status = fflush(_openFiles[i]);
+                if(status) return status;
+            }
+        }
+
+        return 0;
+    }
+
+    if(!f->bufferSize) return 0;
+    ssize_t s = write(f->fd, f->buffer, f->bufferSize);
+    if(s != f->bufferSize) return EOF;
+
+    f->bufferSize = 0;
+    return 0;
 }
 
 /* TODO: remove() and rename() after implementing link(), unlink(), and rmdir()
