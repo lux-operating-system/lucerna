@@ -9,6 +9,7 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <unistd.h>
+#include <limits.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
 
@@ -20,15 +21,35 @@ FILE *stdin = &_stdin;
 FILE *stdout = &_stdout;
 FILE *stderr = &_stderr;
 
+static FILE **_openFiles = NULL;
+static int _openFileCount = 3;  // stdio
+
 FILE *fopen(const char *path, const char *mode) {
-    if(!strlen(path)) {
+    if(_openFileCount >= OPEN_MAX) {
+        errno = ENFILE;
+        return NULL;
+    }
+
+    if(!path || !strlen(path)) {
         errno = ENOENT;
         return NULL;
     }
 
-    if(!strlen(mode)) {
+    if(!mode || !strlen(mode)) {
         errno = EINVAL;
         return NULL;
+    }
+
+    if(!_openFiles) {
+        _openFiles = calloc(OPEN_MAX, sizeof(FILE));
+        if(!_openFiles) {
+            errno = ENOMEM;
+            return NULL;
+        }
+
+        _openFiles[0] = stdin;
+        _openFiles[1] = stdout;
+        _openFiles[2] = stderr;
     }
 
     int numMode = 0;
@@ -89,6 +110,10 @@ FILE *fopen(const char *path, const char *mode) {
     close(file->fd);
     file->fd = -1;
 #endif
+
+    for(int i = 0; i < OPEN_MAX; i++) {
+        if(!_openFiles[i]) _openFiles[i] = file;
+    }
 
     return file;
 }
