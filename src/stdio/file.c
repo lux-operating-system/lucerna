@@ -120,12 +120,24 @@ FILE *fopen(const char *path, const char *mode) {
 }
 
 int fclose(FILE *file) {
+    if(fflush(file)) return EOF;
+
     int status;
     if(file->fd >= 0) status = close(file->fd);
     else status = msync(file->mmap, file->mmapLength, MS_SYNC);
 
     if(status) return EOF;
-    else return 0;
+    
+    for(int i = 0; i < OPEN_MAX; i++) {
+        if(_openFiles[i] == file) {
+            _openFiles[i] = NULL;
+            free(file);
+            _openFileCount--;
+            return 0;
+        }
+    }
+
+    return EOF;
 }
 
 int feof(FILE *file) {
