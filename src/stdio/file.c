@@ -453,6 +453,17 @@ int fflush(FILE *f) {
     return 0;
 }
 
+int setvbuf(FILE *f, char *buf, int type, size_t size) {
+    if(type != _IOLBF && type != _IONBF && type != _IOFBF) {
+        errno = EINVAL;
+        return EOF;
+    }
+
+    fflush(f);
+    f->bufferType = type;
+    return 0;
+}
+
 /* TODO: remove() and rename() after implementing link(), unlink(), and rmdir()
  * syscalls */
 
