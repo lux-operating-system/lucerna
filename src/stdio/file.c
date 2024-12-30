@@ -95,7 +95,7 @@ FILE *fopen(const char *path, const char *mode) {
         return file;
 
     int prot = 0;
-    if(numMode & O_RDWR) prot = PROT_READ | PROT_WRITE;
+    if((numMode & O_RDWR) == O_RDWR) prot = PROT_READ | PROT_WRITE;
     else if(numMode & O_RDONLY) prot = PROT_READ;
     else if(numMode & O_WRONLY) prot = PROT_WRITE;
 
