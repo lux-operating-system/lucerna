@@ -115,6 +115,7 @@ FILE *fopen(const char *path, const char *mode) {
         if(!_openFiles[i]) _openFiles[i] = file;
     }
 
+    _openFileCount++;
     return file;
 }
 
