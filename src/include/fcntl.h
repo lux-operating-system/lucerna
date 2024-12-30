@@ -28,6 +28,7 @@ struct flock {
 #define O_RSYNC                 0x0200
 #define O_SYNC                  0x0400
 #define O_TRUNC                 0x0800
+#define O_CLOFORK               0x1000
 #define O_ACCMODE               (O_RDONLY | O_WRONLY | O_RDWR)
 
 /* fcntl() commands */
