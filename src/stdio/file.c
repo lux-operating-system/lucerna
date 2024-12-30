@@ -355,7 +355,7 @@ char *fgets(char *s, int n, FILE *f) {
     return s;
 }
 
-int fseek(FILE *f, long offset, int where) {
+int fseeko(FILE *f, off_t offset, int where) {
     if(f->mmap) {
         off_t old = f->position;
         switch(where) {
@@ -383,9 +383,14 @@ int fseek(FILE *f, long offset, int where) {
         return 0;
     }
 
-    off_t s = lseek(f->fd, (off_t) offset, where);
+    if(fflush(f)) return -1;
+    off_t s = lseek(f->fd, offset, where);
     if(s < 0) return -1;
     return 0;
+}
+
+int fseek(FILE *f, long offset, int where) {
+    return fseeko(f, (off_t) offset, where);
 }
 
 long ftell(FILE *f) {
