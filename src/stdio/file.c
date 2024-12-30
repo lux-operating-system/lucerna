@@ -175,12 +175,13 @@ size_t fwrite(const void *buffer, size_t size, size_t count, FILE *f) {
 
     if(s + f->bufferSize >= BUFSZ) {
         if(fflush(f)) return 0;
-        if(write(f->fd, buffer, s) != s) {
-            f->error = errno;
+        ssize_t trueSize = write(f->fd, buffer, s);
+        if(trueSize <= 0) {
+            f->errno = errno;
             return 0;
         }
 
-        return count;
+        return trueSize / size;
     }
 
     memcpy(f->buffer + f->bufferSize, buffer, s);
