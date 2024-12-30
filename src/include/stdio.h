@@ -12,15 +12,26 @@
 
 #define EOF                 -1
 
+#define BUFSZ               1024
+#define _IOFBF              1
+#define _IOLBF              2
+#define _IONBF              3
+
 typedef struct {
     int fd;
     int eof, error;
     void *mmap;
     size_t mmapLength;
     off_t position;
+
+    int bufferType;
+    char buffer[BUFSZ];
+    size_t bufferSize;
 } FILE;
 
 extern FILE *stdin, *stdout, *stderr;
+
+int setvbuf(FILE *, char *, int, size_t);
 
 int vsprintf(char *, const char *, va_list);
 int sprintf(char *, const char *, ...);
