@@ -177,7 +177,7 @@ size_t fwrite(const void *buffer, size_t size, size_t count, FILE *f) {
         if(fflush(f)) return 0;
         ssize_t trueSize = write(f->fd, buffer, s);
         if(trueSize <= 0) {
-            f->errno = errno;
+            f->error = errno;
             return 0;
         }
 
