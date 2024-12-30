@@ -41,7 +41,7 @@
 #define SYSCALL_CHMOD           22
 #define SYSCALL_LINK            23
 #define SYSCALL_UNLINK          24
-#define SYSCALL_MKNOD           25
+#define SYSCALL_UMASK           25
 #define SYSCALL_MKDIR           26
 #define SYSCALL_RMDIR           27
 #define SYSCALL_UTIME           28
