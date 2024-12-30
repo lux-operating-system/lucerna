@@ -170,7 +170,7 @@ size_t fwrite(const void *buffer, size_t size, size_t count, FILE *f) {
         memcpy(f->mmap + f->position, buffer, trueCount);
 
         f->position += trueCount;
-        return trueCount / size;
+        return count;
     }
 
     if(s + f->bufferSize >= BUFSZ) {
@@ -431,7 +431,17 @@ int fflush(FILE *f) {
         return 0;
     }
 
+    if(f->mmap) {
+        if(msync(f->mmap, f->mmapLength, MS_SYNC | MS_INVALIDATE)) {
+            f->error = errno;
+            return EOF;
+        }
+
+        return 0;
+    }
+
     if(!f->bufferSize) return 0;
+
     ssize_t s = write(f->fd, f->buffer, f->bufferSize);
     if(s != f->bufferSize) {
         f->error = errno;
