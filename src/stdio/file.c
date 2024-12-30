@@ -161,11 +161,43 @@ size_t fwrite(const void *buffer, size_t size, size_t count, FILE *f) {
         return trueCount / size;
     }
 
-    ssize_t status = write(f->fd, buffer, s);
-    if(status > 0) return status / size;
+    if(s + f->bufferSize >= BUFSZ) {
+        if(fflush(f)) return 0;
+        if(write(f->fd, buffer, s) != s) {
+            f->error = errno;
+            return 0;
+        }
 
-    f->error = errno;
-    return 0;
+        return count;
+    }
+
+    memcpy(f->buffer + f->bufferSize, buffer, s);
+    f->bufferSize += s;
+    f->error = 0;
+    
+    // flush if necessary
+    switch(f->bufferType) {
+    case _IONBF:
+        if(fflush(f)) return 0;
+        return count;
+    
+    case _IOFBF:
+        if(f->bufferSize >= BUFSZ) {
+            if(fflush(f)) return 0;
+        }
+        return count;
+
+    case _IOLBF:
+        const char *bufstr = (const char *) buffer;
+        for(int i = 0; i < s; i++) {
+            if(bufstr[i] == '\n') {
+                if(fflush(f)) return 0;
+            }
+        }
+        return count;
+    }
+
+    return count;
 }
 
 size_t fread(void *buffer, size_t size, size_t count, FILE *f) {
@@ -367,6 +399,7 @@ int fflush(FILE *f) {
         _openFiles = calloc(OPEN_MAX, sizeof(FILE));
         if(!_openFiles) {
             errno = ENOMEM;
+            f->error = errno;
             return EOF;
         }
 
@@ -388,9 +421,13 @@ int fflush(FILE *f) {
 
     if(!f->bufferSize) return 0;
     ssize_t s = write(f->fd, f->buffer, f->bufferSize);
-    if(s != f->bufferSize) return EOF;
+    if(s != f->bufferSize) {
+        f->error = errno;
+        return EOF;
+    }
 
     f->bufferSize = 0;
+    memset(f->buffer, 0, BUFSZ);
     return 0;
 }
 
