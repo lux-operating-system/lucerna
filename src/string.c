@@ -201,7 +201,7 @@ char *strerror(int error) {
 
 char *strchr(const char *s, int c) {
     while(*s) {
-        if(*s == c) return (char *) s;
+        if(*s == (char) c) return (char *) s;
         s++;
     }
 
@@ -212,7 +212,7 @@ char *strrchr(const char *s, int c) {
     size_t len = strlen(s);
     if(!len) return NULL;
     if(len == 1) {
-        if(*s == c) return s;
+        if(*s == (char) c) return s;
         return NULL;
     }
 
@@ -220,7 +220,7 @@ char *strrchr(const char *s, int c) {
     const char *ptr = s + len;
 
     while(len) {
-        if(*ptr == c) return (char *) ptr;
+        if(*ptr == (char) c) return (char *) ptr;
         len--;
         ptr--;
     }
