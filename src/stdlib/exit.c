@@ -5,6 +5,7 @@
 
 #include <stdlib.h>
 #include <unistd.h>
+#include <stdio.h>
 #include <errno.h>
 
 /* POSIX mandates 32 minimum atexit() handlers */
@@ -25,6 +26,8 @@ int atexit(void (*func)(void)) {
 }
 
 void exit(int status) {
+    fflush(NULL);
+
     for(int i = __atexitCount-1; __atexitCount && i >= 0; i--)
         __atexit[i]();
 
