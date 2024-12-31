@@ -31,7 +31,7 @@ void *malloc(size_t n) {
     if(!n) return NULL;
 
     // enforce alignment
-    while(n % 16) n++;
+    while(n % BRK_INCREMENTS) n++;
     void *ptr;
     struct mallocHeader *hdr;
     size_t increment = roundToBrkIncrement(n + sizeof(struct mallocHeader));
