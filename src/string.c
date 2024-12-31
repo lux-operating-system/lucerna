@@ -210,6 +210,13 @@ char *strchr(const char *s, int c) {
 
 char *strrchr(const char *s, int c) {
     size_t len = strlen(s);
+    if(!len) return NULL;
+    if(len == 1) {
+        if(*s == c) return s;
+        return NULL;
+    }
+
+    len--;
     const char *ptr = s + len;
 
     while(len) {
