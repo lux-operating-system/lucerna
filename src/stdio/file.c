@@ -89,6 +89,12 @@ FILE *fopen(const char *path, const char *mode) {
         return NULL;
     }
 
+    for(int i = 0; i < OPEN_MAX; i++) {
+        if(!_openFiles[i]) _openFiles[i] = file;
+    }
+
+    _openFileCount++;
+
 #ifdef STDIO_USE_MMAP
     struct stat st;
     if(fstat(file->fd, &st) || (!S_ISREG(st.st_mode)))
@@ -111,11 +117,6 @@ FILE *fopen(const char *path, const char *mode) {
     file->fd = -1;
 #endif
 
-    for(int i = 0; i < OPEN_MAX; i++) {
-        if(!_openFiles[i]) _openFiles[i] = file;
-    }
-
-    _openFileCount++;
     return file;
 }
 
@@ -123,8 +124,11 @@ int fclose(FILE *file) {
     if(fflush(file)) return EOF;
 
     int status;
-    if(file->fd >= 0) status = close(file->fd);
-    else status = msync(file->mmap, file->mmapLength, MS_SYNC);
+    if(!file->mmap) status = close(file->fd);
+    else {
+        status = msync(file->mmap, file->mmapLength, MS_SYNC);
+        if(!status) status = munmap(file->mmap, file->mmapLength);
+    }
 
     if(status) return EOF;
     
