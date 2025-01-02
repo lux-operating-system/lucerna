@@ -438,8 +438,14 @@ void *mmap(void *addr, size_t len, int prot, int flags, int fd, off_t off) {
     return (void *) ptr;
 }
 
+int munmap(void *addr, size_t len) {
+    errno = ENOSYS; /* TODO */
+    return -1;
+}
+
 int msync(void *addr, size_t length, int flags) {
-    return 0;   /* TODO */
+    errno = ENOSYS; /* TODO */
+    return -1;
 }
 
 /* Group 5: Driver I/O Functions */
