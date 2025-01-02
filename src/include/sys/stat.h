@@ -27,6 +27,7 @@ struct stat {
 #define S_IFREG             0x00000004      // regular file
 #define S_IFDIR             0x00000005      // directory
 #define S_IFLNK             0x00000006      // symbolic link
+#define S_IFSOCK            0x00000007      // socket
 #define S_IFMT              0x00000007      // mask for file type
 
 #define S_IRUSR             0x00000008      // owner read perms
@@ -54,6 +55,7 @@ struct stat {
 #define S_ISFIFO(m)         ((m & S_IFMT) == S_IFIFO)
 #define S_ISREG(m)          ((m & S_IFMT) == S_IFREG)
 #define S_ISLNK(m)          ((m & S_IFMT) == S_IFLNK)
+#define S_ISSOCK(m)         ((m & S_IFMT) == S_IFSOCK)
 
 int stat(const char *, struct stat *);
 int fstat(int, struct stat *);
