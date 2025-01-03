@@ -188,6 +188,26 @@ off_t lseek(int fd, off_t offset, int where) {
     return status;
 }
 
+int chown(const char *path, uid_t owner, gid_t group) {
+    int status = (int) luxSyscall(SYSCALL_CHOWN, (uint64_t) path, owner, group, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    }
+
+    return 0;
+}
+
+int chmod(const char *path, mode_t mode) {
+    int status = (int) luxSyscall(SYSCALL_CHMOD, (uint64_t) path, mode, 0, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    }
+
+    return 0;
+}
+
 mode_t umask(mode_t cmask) {
     return (mode_t) luxSyscall(SYSCALL_UMASK, cmask, 0, 0, 0);
 }
