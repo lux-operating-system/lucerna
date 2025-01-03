@@ -89,6 +89,8 @@ FILE *fopen(const char *path, const char *mode) {
         return NULL;
     }
 
+    file->bufferType = _IOFBF;
+
     for(int i = 0; i < OPEN_MAX; i++) {
         if(!_openFiles[i]) _openFiles[i] = file;
     }
