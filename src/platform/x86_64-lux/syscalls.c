@@ -213,9 +213,13 @@ mode_t umask(mode_t cmask) {
 }
 
 int mkdir(const char *path, mode_t mode) {
-    /* TODO */
-    errno = ENOSYS;
-    return -1;
+    int status = (int) luxSyscall(SYSCALL_MKDIR, (uint64_t) path, mode, 0, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    }
+
+    return 0;
 }
 
 int chdir(const char *path) {
