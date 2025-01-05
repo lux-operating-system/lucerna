@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
-#include <time.h>
+#include <utime.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/time.h>
@@ -213,6 +213,16 @@ mode_t umask(mode_t cmask) {
 
 int mkdir(const char *path, mode_t mode) {
     int status = (int) luxSyscall(SYSCALL_MKDIR, (uint64_t) path, mode, 0, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    }
+
+    return 0;
+}
+
+int utime(const char *path, const struct utimbuf *times) {
+    int status = (int) luxSyscall(SYSCALL_UTIME, (uint64_t) path, (uint64_t) times, 0, 0);
     if(status < 0) {
         errno = -1*status;
         return -1;
