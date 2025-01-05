@@ -26,7 +26,7 @@
 #define SYSCALL_SETUID          10
 #define SYSCALL_SETGID          11
 #define SYSCALL_MSLEEP          12
-#define SYSCALL_TIMES           13
+#define SYSCALL_GETTIMEOFDAY    13
 
 /* Group 2: File System Manipulation */
 

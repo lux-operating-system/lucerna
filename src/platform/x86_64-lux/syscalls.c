@@ -17,6 +17,7 @@
 #include <time.h>
 #include <string.h>
 #include <sys/types.h>
+#include <sys/time.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/ioctl.h>
@@ -96,6 +97,10 @@ struct tm *localtime(const time_t *timer) {
 
 unsigned long msleep(unsigned long msec) {
     return (unsigned long) luxSyscall(SYSCALL_MSLEEP, msec, 0, 0, 0);
+}
+
+int gettimeofday(struct timeval *tz, void *tzp) {
+    return (int) luxSyscall(SYSCALL_GETTIMEOFDAY, (uint64_t) tz, (uint64_t) tzp, 0, 0);
 }
 
 /* Group 2: File System Manipulation */
