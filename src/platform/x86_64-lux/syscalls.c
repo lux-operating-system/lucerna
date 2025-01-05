@@ -32,7 +32,13 @@ void _exit(int status) {
 }
 
 pid_t fork(void) {
-    return (pid_t) luxSyscall(SYSCALL_FORK, 0, 0, 0, 0);
+    pid_t status = (pid_t) luxSyscall(SYSCALL_FORK, 0, 0, 0, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    }
+
+    return status;
 }
 
 pid_t vfork(void) {
