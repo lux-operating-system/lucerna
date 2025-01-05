@@ -87,18 +87,6 @@ gid_t getgid(void) {
     return (gid_t) luxSyscall(SYSCALL_GETGID, 0, 0, 0, 0);
 }
 
-time_t time(time_t *tloc) {
-    *tloc = 0;
-    return 0;   /* TODO */
-}
-
-static struct tm local;
-
-struct tm *localtime(const time_t *timer) {
-    memset(&local, 0, sizeof(struct tm));   /* TODO */
-    return &local;
-}
-
 // TODO: setuid(), setgid()
 
 unsigned long msleep(unsigned long msec) {
