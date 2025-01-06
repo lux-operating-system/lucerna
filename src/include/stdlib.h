@@ -14,6 +14,8 @@
 #define EXIT_SUCCESS    0
 #define EXIT_FAILURE    1
 
+#define RAND_MAX        ((1<<30)-1)
+
 void *malloc(size_t);
 void free(void *);
 void *calloc(size_t, size_t);
@@ -50,3 +52,6 @@ int unlockpt(int);
 int abs(int);
 
 int system(const char *);
+
+int rand(void);
+void srand(unsigned);
