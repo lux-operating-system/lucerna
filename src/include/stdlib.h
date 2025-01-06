@@ -27,6 +27,9 @@ char *ultoa(unsigned long, char *, int);
 long atol(const char *);
 long long atoll(const char *);
 
+long strtol(const char *, char **, int);
+long long strtoll(const char *, char **, int);
+
 double strtod(const char *, char **);
 float strtof(const char *, char **);
 long double strtold(const char *, char **);

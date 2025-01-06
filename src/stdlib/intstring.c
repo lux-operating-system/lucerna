@@ -7,6 +7,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <ctype.h>
+#include <errno.h>
 
 char *itoa(int n, char *buffer, int radix) {
     return ltoa((long)n, buffer, radix);
@@ -137,4 +138,78 @@ long long atoll(const char *s) {
     }
 
     return v;
+}
+
+long long strtoll(const char *str, char **endptr, int base) {
+    while(isspace(*str)) str++;
+
+    if(*str == '-')
+        return -1 * strtoll(str+1, endptr, base);
+    else if(*str == '+')
+        str++;
+
+    if(!base) {
+        if(str[0] == '0' && (str[1] == 'x' || str[1] == 'X')) base = 16;
+        else if(str[0] == '0') base = 8;
+        else if(str[0] >= '1' && str[0] <= '9') base = 10;
+        else {
+            if(endptr) *endptr = (char *) str;
+            errno = EINVAL;
+            return 0;
+        }
+    }
+
+    if(base < 2 || base > 36) {
+        if(endptr) *endptr = (char *) str;
+        errno = EINVAL;
+        return 0;
+    }
+
+    if(base == 16) {
+        if(str[0] == '0' && (str[1] == 'x' || str[1] == 'X'))
+            return strtoll(str+2, endptr, base);
+    }
+
+    if(base == 10) {
+        long long decimal = atoll(str);
+        while(isdigit(*str)) str++;
+        if(endptr) *endptr = (char *) str;
+        return decimal;
+    }
+
+    long long number = 0, multiplier = 1;
+    int numberLength = 0;
+
+    if(base < 10) {
+        while(isdigit(str[numberLength])) {
+            numberLength++;
+        }
+    } else {
+        while(isalnum(str[numberLength])) {
+            numberLength++;
+        }
+    }
+
+    if(!numberLength) return 0;
+
+    for(int i = numberLength-1; i >= 0; i--) {
+        char digit = str[i];
+        if(digit >= 'a' && digit <= 'z') {
+            digit -= 'a' + 10;
+        } else if(digit >= 'A' && digit <= 'Z') {
+            digit -= 'A' + 10;
+        } else {
+            digit -= '0';
+        }
+
+        number += (digit * multiplier);
+        multiplier *= base;
+    }
+
+    if(endptr) *endptr = (char *) str + numberLength;
+    return number;
+}
+
+long strtol(const char *str, char **endptr, int base) {
+    return (long) strtoll(str, endptr, base);
 }
