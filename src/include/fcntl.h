@@ -47,6 +47,7 @@ struct flock {
 
 /* fcntl() flags */
 #define FD_CLOEXEC              (O_CLOEXEC)
+#define FD_CLOFORK              (O_CLOFORK)
 
 /* file locks */
 #define F_UNLOCK                1
