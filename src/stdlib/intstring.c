@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <ctype.h>
 
 char *itoa(int n, char *buffer, int radix) {
     return ltoa((long)n, buffer, radix);
@@ -109,6 +110,8 @@ long atol(const char *s) {
 }
 
 long long atoll(const char *s) {
+    while(isspace(*s)) s++;
+
     if(s[0] == '-' && strlen(s) > 1)
         return -1 * atoll(s+1);
 
