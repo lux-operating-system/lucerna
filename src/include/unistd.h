@@ -23,6 +23,8 @@ void _exit(int);
 pid_t fork(void);
 pid_t vfork(void);
 int sched_yield(void);
+int usleep(useconds_t);
+unsigned sleep(unsigned);
 
 int execl(const char *, const char *, ...);
 int execv(const char *, char *const[]);
