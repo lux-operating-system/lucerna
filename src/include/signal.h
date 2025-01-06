@@ -61,9 +61,6 @@
 #define SA_NOCLDWAIT    0x0020
 #define SA_NODEFER      0x0040
 
-#define SIG_BLOCK       0x0001
-#define SIG_UNBLOCK     0x0002
-
 #define SS_ONSTACK      0x0001
 #define SS_DISABLE      0x0002
 
