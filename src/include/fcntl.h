@@ -42,6 +42,8 @@ struct flock {
 #define F_SETLKW                8
 #define F_GETOWN                9
 #define F_SETOWN                10
+#define F_DUPFD_CLOEXEC         11
+#define F_DUPFD_CLOFORK         12
 
 /* fcntl() flags */
 #define FD_CLOEXEC              (O_CLOEXEC)
