@@ -12,7 +12,7 @@
 
 #define EOF                 -1
 
-#define BUFSZ               1024
+#define BUFSIZ              1024
 #define _IOFBF              1
 #define _IOLBF              2
 #define _IONBF              3
@@ -25,7 +25,7 @@ typedef struct {
     off_t position;
 
     int bufferType;
-    char buffer[BUFSZ];
+    char buffer[BUFSIZ];
     size_t bufferSize;
 } FILE;
 
