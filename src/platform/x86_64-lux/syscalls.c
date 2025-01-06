@@ -89,8 +89,8 @@ gid_t getgid(void) {
 
 // TODO: setuid(), setgid()
 
-unsigned long msleep(unsigned long msec) {
-    return (unsigned long) luxSyscall(SYSCALL_MSLEEP, msec, 0, 0, 0);
+int usleep(useconds_t useconds) {
+    return (int) luxSyscall(SYSCALL_MSLEEP, useconds / 1000, 0, 0, 0);
 }
 
 int gettimeofday(struct timeval *tz, void *tzp) {
