@@ -492,10 +492,17 @@ int fseek(FILE *f, long offset, int where) {
     return fseeko(f, (off_t) offset, where);
 }
 
-long ftell(FILE *f) {
+off_t ftello(FILE *f) {
     if(f->mmap) return f->position;
+    return lseek(f->fd, 0, SEEK_CUR);
+}
 
-    return (long) lseek(f->fd, 0, SEEK_CUR);
+long ftell(FILE *f) {
+    return (long) ftello(f);
+}
+
+void rewind(FILE *f) {
+    fseek(f, 0L, SEEK_SET);
 }
 
 int fileno(FILE *f) {

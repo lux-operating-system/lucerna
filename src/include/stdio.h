@@ -73,8 +73,10 @@ int fclose(FILE *);
 int fseek(FILE *, long, int);
 int fseeko(FILE *, off_t, int);
 long ftell(FILE *);
+off_t ftello(FILE *);
 int fileno(FILE *);
 void clearerr(FILE *);
+void rewind(FILE *);
 
 void perror(const char *);
 
