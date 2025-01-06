@@ -68,6 +68,7 @@ ssize_t getline(char **, size_t *, FILE *);
 int fflush(FILE *);
 
 FILE *fopen(const char *, const char *);
+FILE *fdopen(int, const char *);
 int fclose(FILE *);
 int fseek(FILE *, long, int);
 int fseeko(FILE *, off_t, int);

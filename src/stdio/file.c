@@ -122,6 +122,99 @@ FILE *fopen(const char *path, const char *mode) {
     return file;
 }
 
+FILE *fdopen(int fd, const char *mode) {
+    if(_openFileCount >= OPEN_MAX) {
+        errno = ENFILE;
+        return NULL;
+    }
+
+    if(!mode || !strlen(mode)) {
+        errno = EINVAL;
+        return NULL;
+    }
+
+    if(!_openFiles) {
+        _openFiles = calloc(OPEN_MAX, sizeof(FILE));
+        if(!_openFiles) {
+            errno = ENOMEM;
+            return NULL;
+        }
+
+        _openFiles[0] = stdin;
+        _openFiles[1] = stdout;
+        _openFiles[2] = stderr;
+    }
+
+    int numMode = 0;
+    if(!strcmp(mode, "r") || !strcmp(mode, "rb"))
+        numMode = O_RDONLY;
+    else if(!strcmp(mode, "w") || !strcmp(mode, "wb"))
+        numMode = O_WRONLY | O_CREAT;
+    else if(!strcmp(mode, "a") || !strcmp(mode, "ab"))
+        numMode = O_WRONLY | O_CREAT | O_APPEND;
+    else if(!strcmp(mode, "r+") || !strcmp(mode, "r+b") || !strcmp(mode, "rb+"))
+        numMode = O_RDWR;
+    else if(!strcmp(mode, "w+") || !strcmp(mode, "w+b") || !strcmp(mode, "wb+"))
+        numMode = O_RDWR | O_CREAT;
+    else if(!strcmp(mode, "a+") || !strcmp(mode, "a+b") || !strcmp(mode, "ab+"))
+        numMode = O_RDWR | O_CREAT | O_APPEND;
+    else if(!strcmp(mode, "wx") || !strcmp(mode, "wbx"))
+        numMode = O_WRONLY | O_CREAT | O_EXCL;
+    else if(!strcmp(mode, "w+x") || !strcmp(mode, "w+bx") || !strcmp(mode, "wb+x") || !strcmp(mode, "wbx+"))
+        numMode = O_RDWR | O_CREAT | O_EXCL;
+    
+    if(!numMode) {
+        errno = EINVAL;
+        return NULL;
+    }
+
+    int flags = fcntl(fd, F_GETFL);
+    if(flags < 0) return NULL;
+
+    if((flags & O_RDONLY) != (numMode & O_RDONLY)) {
+        errno = EINVAL;
+        return NULL;
+    }
+
+    if((flags & O_WRONLY) != (numMode & O_WRONLY)) {
+        errno = EINVAL;
+        return NULL;
+    }
+
+    if((flags & O_RDWR) != (numMode & O_RDWR)) {
+        errno = EINVAL;
+        return NULL;
+    }
+
+    int newFlags = flags;
+    if(numMode & O_APPEND) newFlags |= O_APPEND;
+    else newFlags &= ~O_APPEND;
+
+    FILE *file = calloc(1, sizeof(FILE));
+    if(!file) {
+        errno = ENOMEM;
+        return NULL;
+    }
+
+    if(newFlags != flags) {
+        if(fcntl(fd, F_SETFL, newFlags) < 0) {
+            free(file);
+            return NULL;
+        }
+    }
+
+    file->fd = fd;
+    file->bufferType = _IOFBF;
+    file->position = lseek(fd, 0, SEEK_CUR);
+
+    for(int i = 0; i < OPEN_MAX; i++) {
+        if(!_openFiles[i]) _openFiles[i] = file;
+    }
+
+    _openFileCount++;
+    return file;
+}
+
 int fclose(FILE *file) {
     if(fflush(file)) return EOF;
 
