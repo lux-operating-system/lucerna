@@ -18,6 +18,11 @@
 #define STDOUT_FILENO           1
 #define STDERR_FILENO           2
 
+#define F_OK                    0x01
+#define R_OK                    0x02
+#define W_OK                    0x04
+#define X_OK                    0x08
+
 extern char **environ;
 void _exit(int);
 pid_t fork(void);
@@ -43,6 +48,7 @@ ssize_t write(int, const void *, size_t);
 int brk(void *);
 void *sbrk(intptr_t);
 off_t lseek(int, off_t, int);
+int access(const char *, int);
 
 int chown(const char *, uid_t, gid_t);
 int chmod(const char *, mode_t);
