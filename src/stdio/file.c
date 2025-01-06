@@ -179,7 +179,7 @@ size_t fwrite(const void *buffer, size_t size, size_t count, FILE *f) {
         return count;
     }
 
-    if(s + f->bufferSize >= BUFSZ) {
+    if(s + f->bufferSize >= BUFSIZ) {
         if(fflush(f)) return 0;
         ssize_t trueSize = write(f->fd, buffer, s);
         if(trueSize <= 0) {
@@ -201,7 +201,7 @@ size_t fwrite(const void *buffer, size_t size, size_t count, FILE *f) {
         return count;
     
     case _IOFBF:
-        if(f->bufferSize >= BUFSZ) {
+        if(f->bufferSize >= BUFSIZ) {
             if(fflush(f)) return 0;
         }
         return count;
@@ -461,7 +461,7 @@ int fflush(FILE *f) {
     }
 
     f->bufferSize = 0;
-    memset(f->buffer, 0, BUFSZ);
+    memset(f->buffer, 0, BUFSIZ);
     return 0;
 }
 
