@@ -49,6 +49,9 @@ int brk(void *);
 void *sbrk(intptr_t);
 off_t lseek(int, off_t, int);
 int access(const char *, int);
+int dup(int);
+int dup2(int, int);
+int dup3(int, int, int);
 
 int chown(const char *, uid_t, gid_t);
 int chmod(const char *, mode_t);
