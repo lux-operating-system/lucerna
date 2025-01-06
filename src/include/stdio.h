@@ -17,6 +17,9 @@
 #define _IOLBF              2
 #define _IONBF              3
 
+#define L_tmpnam            64
+#define TMP_MAX             100000
+
 typedef struct {
     int fd;
     int eof, error;
@@ -82,3 +85,4 @@ void perror(const char *);
 
 int remove(const char *);
 int rename(const char *, const char *);
+char *tmpnam(char *);
