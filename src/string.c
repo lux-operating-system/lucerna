@@ -251,3 +251,28 @@ char *strstr(const char *s1, const char *s2) {
 
     return NULL;
 }
+
+char *strncat(char *s1, const char *s2, size_t n) {
+    size_t start = strlen(s1);
+    size_t count;
+
+    for(count = 0; count < n; count++) {
+        s1[count + start] = s2[count];
+        if(!s2[count]) return s1;
+    }
+
+    s1[count + start] = 0;
+    return s1;
+}
+
+char *strcat(char *s1, const char *s2) {
+    size_t start = strlen(s1);
+    size_t i;
+
+    for(i = 0; s2[i]; i++) {
+        s1[start + i] = s2[i];
+    }
+
+    s1[start+i] = 0;
+    return s1;
+}
