@@ -70,6 +70,11 @@
 #define MINSIGSTKSZ     4096
 #define SIGSTKSZ        16384
 
+/* Signal Masking */
+#define SIG_BLOCK       1
+#define SIG_SETMASK     2
+#define SIG_UNBLOCK     3
+
 typedef volatile uint32_t sig_atomic_t;
 typedef uint64_t sigset_t;
 
@@ -102,3 +107,4 @@ int raise(int);
 void (*signal(int, void (*)(int)))(int);
 void (*bsd_signal(int, void (*)(int)))(int);
 int sigaction(int, const struct sigaction *, struct sigaction *);
+int sigprocmask(int, const sigset_t *, sigset_t *);
