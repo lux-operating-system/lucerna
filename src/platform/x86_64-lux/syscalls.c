@@ -207,6 +207,46 @@ int chmod(const char *path, mode_t mode) {
     return 0;
 }
 
+int link(const char *old, const char *new) {
+    int status = (int) luxSyscall(SYSCALL_LINK, (uint64_t) old, (uint64_t) new, 0, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    }
+
+    return 0;
+}
+
+int unlink(const char *path) {
+    int status = (int) luxSyscall(SYSCALL_UNLINK, (uint64_t) path, 0, 0, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    }
+
+    return 0;
+}
+
+int symlink(const char *old, const char *new) {
+    int status = (int) luxSyscall(SYSCALL_SYMLINK, (uint64_t) old, (uint64_t) new, 0, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    }
+
+    return 0;
+}
+
+ssize_t readlink(const char *path, char *buf, size_t bufsiz) {
+    ssize_t status = (ssize_t) luxSyscall(SYSCALL_READLINK, (uint64_t) path, (uint64_t) buf, bufsiz, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    }
+
+    return status;
+}
+
 mode_t umask(mode_t cmask) {
     return (mode_t) luxSyscall(SYSCALL_UMASK, cmask, 0, 0, 0);
 }
