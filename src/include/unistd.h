@@ -52,6 +52,10 @@ int access(const char *, int);
 int dup(int);
 int dup2(int, int);
 int dup3(int, int, int);
+int link(const char *, const char *);
+int symlink(const char *, const char *);
+int unlink(const char *);
+ssize_t readlink(const char *, char *, size_t);
 
 int chown(const char *, uid_t, gid_t);
 int chmod(const char *, mode_t);
