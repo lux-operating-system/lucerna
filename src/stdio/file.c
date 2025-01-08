@@ -576,15 +576,18 @@ int setvbuf(FILE *f, char *buf, int type, size_t size) {
     return 0;
 }
 
-/* TODO: remove() and rename() after implementing link(), unlink(), and rmdir()
- * syscalls */
-
 int remove(const char *path) {
-    errno = ENOSYS;
-    return -1;
+    return unlink(path);
 }
 
 int rename(const char *old, const char *new) {
-    errno = ENOSYS;
-    return -1;
+    int status = link(old, new);
+    if(status) return -1;
+    status = unlink(old);
+    if(status) {
+        unlink(new);
+        return -1;
+    }
+
+    return 0;
 }
