@@ -7,11 +7,38 @@
 #include <stddef.h>
 #include <sys/time.h>
 
+static int __daysPerMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
 time_t time(time_t *tloc) {
     struct timeval tv;
     gettimeofday(&tv, NULL);
     if(tloc) *tloc = tv.tv_sec;
     return tv.tv_sec;
+}
+
+time_t mktime(struct tm *timeptr) {
+    time_t timer;
+
+    int year = timeptr->tm_year + 1900;
+    int leap = (!(year % 4) && (year % 100)) || (!(year % 400));
+
+    timeptr->tm_yday = 0;
+    timeptr->tm_wday = 0;
+
+    for(int i = 0; i < timeptr->tm_mon; i++) {
+        if(i == 2 && leap) timeptr->tm_yday += 29;   // special case for february
+        else timeptr->tm_yday += __daysPerMonth[i-1];
+    }
+
+    timeptr->tm_yday += timeptr->tm_mday - 1;
+
+    timer = timeptr->tm_sec + (timeptr->tm_min*60) + (timeptr->tm_hour*3600)
+            + (timeptr->tm_yday * 86400) + ((timeptr->tm_year-70) * 31536000)
+            + (((timeptr->tm_year-69)/4) * 86400) - (((timeptr->tm_yday-1)/100) * 86400)
+            + (((timeptr->tm_year+299)/400) * 86400);
+    
+    gmtime_r(&timer, timeptr);
+    return timer;
 }
 
 struct tm *gmtime_r(const time_t *timer, struct tm *result) {
@@ -34,7 +61,6 @@ struct tm *gmtime_r(const time_t *timer, struct tm *result) {
     result->tm_year += 70;          // adjust years to count from 1900
 
     // now we can use the day of year to calculate month and day of month
-    int daysPerMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     int y = result->tm_year+1970;
     int leap = (!(y % 400)) || (!(y % 4) && (y % 100));
 
@@ -46,7 +72,7 @@ struct tm *gmtime_r(const time_t *timer, struct tm *result) {
             if(leap) daysInMonth = 29;
             else daysInMonth = 28;
         } else {
-            daysInMonth = daysPerMonth[result->tm_mon];
+            daysInMonth = __daysPerMonth[result->tm_mon];
         }
 
         if(result->tm_mday > daysInMonth) {
