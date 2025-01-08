@@ -155,8 +155,16 @@ int lstat(const char *path, struct stat *buf) {
 }
 
 int stat(const char *path, struct stat *buf) {
-    /* TODO: read symlinks after implementing readlink() */
-    return lstat(path, buf);
+    if(lstat(path, buf)) return -1;
+    if(S_ISLNK(buf->st_mode)) {
+        char linkTarget[PATH_MAX+1];
+        ssize_t s = readlink(path, linkTarget, PATH_MAX);
+        if(s < 0) return -1;
+        linkTarget[s] = 0;
+        return stat(linkTarget, buf);
+    }
+
+    return 0;
 }
 
 int fstat(int fd, struct stat *buf) {
