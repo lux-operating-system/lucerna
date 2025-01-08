@@ -15,4 +15,13 @@ struct tm {
 };
 
 time_t time(time_t *);
+time_t mktime(struct tm *);
+void tzset(void);
+struct tm *gmtime(const time_t *);
+struct tm *gmtime_r(const time_t *, struct tm *);
 struct tm *localtime(const time_t *);
+struct tm *localtime_r(const time_t *, struct tm *);
+char *asctime(const struct tm *);
+char *asctime_r(const struct tm *, char *);
+char *ctime(const time_t *);
+char *ctime_r(const time_t *, char *);
