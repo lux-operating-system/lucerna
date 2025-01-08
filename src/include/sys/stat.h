@@ -58,6 +58,7 @@ struct stat {
 #define S_ISSOCK(m)         ((m & S_IFMT) == S_IFSOCK)
 
 int stat(const char *, struct stat *);
+int lstat(const char *, struct stat *);
 int fstat(int, struct stat *);
 int mkdir(const char *, mode_t);
 mode_t umask(mode_t);
