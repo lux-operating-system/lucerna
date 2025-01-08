@@ -56,6 +56,7 @@ int link(const char *, const char *);
 int symlink(const char *, const char *);
 int unlink(const char *);
 ssize_t readlink(const char *, char *, size_t);
+int rmdir(const char *);
 
 int chown(const char *, uid_t, gid_t);
 int chmod(const char *, mode_t);
