@@ -144,14 +144,19 @@ ssize_t write(int fd, const void *buffer, size_t count) {
     return status;
 }
 
-int stat(const char *path, struct stat *buf) {
-    int status = (int) luxSyscall(SYSCALL_STAT, (uint64_t)path, (uint64_t)buf, 0, 0);
+int lstat(const char *path, struct stat *buf) {
+    int status = (int) luxSyscall(SYSCALL_LSTAT, (uint64_t)path, (uint64_t)buf, 0, 0);
     if(status < 0) {
         errno = -1*status;
         return -1;
     }
 
     return status;
+}
+
+int stat(const char *path, struct stat *buf) {
+    /* TODO: read symlinks after implementing readlink() */
+    return lstat(path, buf);
 }
 
 int fstat(int fd, struct stat *buf) {

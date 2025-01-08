@@ -34,7 +34,7 @@
 #define SYSCALL_CLOSE           15
 #define SYSCALL_READ            16
 #define SYSCALL_WRITE           17
-#define SYSCALL_STAT            18
+#define SYSCALL_LSTAT           18
 #define SYSCALL_FSTAT           19
 #define SYSCALL_LSEEK           20
 #define SYSCALL_CHOWN           21
