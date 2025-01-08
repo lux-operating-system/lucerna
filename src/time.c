@@ -4,6 +4,7 @@
  */
 
 #include <time.h>
+#include <stdio.h>
 #include <stddef.h>
 #include <sys/time.h>
 
@@ -91,4 +92,20 @@ struct tm *gmtime_r(const time_t *timer, struct tm *result) {
 static struct tm __gmtime;
 struct tm *gmtime(const time_t *timer) {
     return gmtime_r(timer, &__gmtime);
+}
+
+char *asctime_r(const struct tm *tm, char *buf) {
+    char *weekdays[] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+    char *months[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+    
+    sprintf(buf, "%s %s %2d %02d:%02d:%02d %d\n",
+        weekdays[tm->tm_wday%7], months[tm->tm_mon%12], tm->tm_mday%32,
+        tm->tm_hour%24, tm->tm_min%60, tm->tm_sec%60, tm->tm_year+1900);
+    return buf;
+}
+
+static char __asctime[26];
+char *asctime(const struct tm *tm) {
+    return asctime_r(tm, __asctime);
 }
