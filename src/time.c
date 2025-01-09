@@ -101,7 +101,7 @@ char *asctime_r(const struct tm *tm, char *buf) {
     
     sprintf(buf, "%s %s %2d %02d:%02d:%02d %d\n",
         weekdays[tm->tm_wday%7], months[tm->tm_mon%12], tm->tm_mday%32,
-        tm->tm_hour%24, tm->tm_min%60, tm->tm_sec%60, tm->tm_year+1900);
+        tm->tm_hour%24, tm->tm_min%60, tm->tm_sec%60, (tm->tm_year+1900)%10000);
     return buf;
 }
 
