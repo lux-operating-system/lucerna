@@ -13,9 +13,20 @@
 #include <sys/stat.h>
 #include <sys/mman.h>
 
-static FILE _stdin = { .fd = STDIN_FILENO, .mmap = NULL, .error = 0, .eof = 0, .bufferType = _IOLBF, .bufferSize = 0 };
-static FILE _stdout = { .fd = STDOUT_FILENO, .mmap = NULL, .error = 0, .eof = 0, .bufferType = _IOLBF, .bufferSize = 0 };
-static FILE _stderr = { .fd = STDERR_FILENO, .mmap = NULL, .error = 0, .eof = 0, .bufferType = _IONBF, .bufferSize = 0 };
+static FILE _stdin = {
+    .fd = STDIN_FILENO, .mmap = NULL, .error = 0,
+    .eof = 0, .bufferType = _IOLBF, .bufferSize = 0
+};
+
+static FILE _stdout = {
+    .fd = STDOUT_FILENO, .mmap = NULL, .error = 0,
+    .eof = 0, .bufferType = _IOLBF, .bufferSize = 0
+};
+
+static FILE _stderr = {
+    .fd = STDERR_FILENO, .mmap = NULL, .error = 0,
+    .eof = 0, .bufferType = _IONBF, .bufferSize = 0
+};
 
 FILE *stdin = &_stdin;
 FILE *stdout = &_stdout;
