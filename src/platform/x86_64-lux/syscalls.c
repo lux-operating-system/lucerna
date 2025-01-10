@@ -385,6 +385,16 @@ void rewinddir(DIR *dir) {
     seekdir(dir, 0);
 }
 
+int fsync(int fd) {
+    int status = (int) luxSyscall(SYSCALL_FSYNC, fd, 0, 0, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    }
+
+    return 0;
+}
+
 /* Group 3: Interprocess Communication */
 
 int socket(int domain, int type, int protocol) {
