@@ -13,6 +13,7 @@
 
 static void (*__atexit[MAX_ATEXIT])(void);
 static int __atexitCount = 0;
+void __closeStreams(void);
 
 int atexit(void (*func)(void)) {
     if(__atexitCount >= MAX_ATEXIT) {
@@ -27,6 +28,7 @@ int atexit(void (*func)(void)) {
 
 void exit(int status) {
     fflush(NULL);
+    __closeStreams();
 
     for(int i = __atexitCount-1; __atexitCount && i >= 0; i--)
         __atexit[i]();
