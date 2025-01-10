@@ -525,13 +525,23 @@ void *mmap(void *addr, size_t len, int prot, int flags, int fd, off_t off) {
 }
 
 int munmap(void *addr, size_t len) {
-    errno = ENOSYS; /* TODO */
-    return -1;
+    int status = (int) luxSyscall(SYSCALL_MUNMAP, (uint64_t) addr, len, 0, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    }
+
+    return 0;
 }
 
-int msync(void *addr, size_t length, int flags) {
-    errno = ENOSYS; /* TODO */
-    return -1;
+int msync(void *addr, size_t len, int flags) {
+    int status = (int) luxSyscall(SYSCALL_MSYNC, (uint64_t) addr, len, flags, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    }
+
+    return 0;
 }
 
 /* Group 5: Driver I/O Functions */
