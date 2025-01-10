@@ -9,7 +9,7 @@
 
 int rmdir(const char *path) {
     struct stat st;
-    if(stat(path, &st)) return -1;
+    if(lstat(path, &st)) return -1;
     if(!S_ISDIR(st.st_mode)) {
         errno = ENOTDIR;
         return -1;
