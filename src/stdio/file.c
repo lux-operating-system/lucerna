@@ -35,6 +35,19 @@ FILE *stderr = &_stderr;
 static FILE **_openFiles = NULL;
 static int _openFileCount = 3;  // stdio
 
+void __closeStreams(void) {  /* internal function to be used by exit() */
+    if(!_openFiles) {
+        fclose(stdin);
+        fclose(stdout);
+        fclose(stderr);
+        return;
+    }
+
+    for(int i = 0; i < OPEN_MAX; i++) {
+        if(_openFiles[i]) fclose(_openFiles[i]);
+    }
+}
+
 FILE *fopen(const char *path, const char *mode) {
     if(_openFileCount >= OPEN_MAX) {
         errno = ENFILE;
@@ -227,6 +240,11 @@ FILE *fdopen(int fd, const char *mode) {
 }
 
 int fclose(FILE *file) {
+    if(!file) {
+        errno = EINVAL;
+        return EOF;
+    }
+
     if(fflush(file)) return EOF;
 
     int status;
