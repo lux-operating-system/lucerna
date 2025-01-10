@@ -7,8 +7,8 @@
 
 #include <sys/types.h>
 
-#define _POSIX_VERSION              200112L
-#define _POSIX2_VERSION             200112L
+#define _POSIX_VERSION              200809L
+#define _POSIX2_VERSION             200809L
 
 #define SEEK_SET                1
 #define SEEK_CUR                2
