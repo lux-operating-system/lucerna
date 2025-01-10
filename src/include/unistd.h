@@ -48,6 +48,7 @@ ssize_t write(int, const void *, size_t);
 int brk(void *);
 void *sbrk(intptr_t);
 off_t lseek(int, off_t, int);
+int fsync(int);
 int access(const char *, int);
 int dup(int);
 int dup2(int, int);
