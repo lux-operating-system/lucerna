@@ -230,7 +230,8 @@ int fclose(FILE *file) {
     for(int i = 0; i < OPEN_MAX; i++) {
         if(_openFiles[i] == file) {
             _openFiles[i] = NULL;
-            free(file);
+            if((file != stdin) && (file != stdout) && (file != stderr))
+                free(file);
             _openFileCount--;
             return 0;
         }
