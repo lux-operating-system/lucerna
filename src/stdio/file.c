@@ -607,6 +607,9 @@ int setvbuf(FILE *f, char *buf, int type, size_t size) {
 }
 
 int remove(const char *path) {
+    struct stat st;
+    if(lstat(path, &st)) return -1;
+    if(S_ISDIR(st.st_mode)) return rmdir(path);
     return unlink(path);
 }
 
