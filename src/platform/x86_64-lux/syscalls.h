@@ -50,7 +50,7 @@
 #define SYSCALL_CHDIR           31
 #define SYSCALL_GETCWD          32
 #define SYSCALL_MOUNT           33
-#define SYSCALL_UMOUNT          34
+#define SYSCALL_UMOUNT2         34
 #define SYSCALL_FCNTL           35
 #define SYSCALL_OPENDIR         36
 #define SYSCALL_CLOSEDIR        37
