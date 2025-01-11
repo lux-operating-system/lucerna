@@ -314,6 +314,20 @@ int mount(const char *src, const char *tgt, const char *type, int flags, void *d
     return status;
 }
 
+int umount2(const char *tgt, int flags) {
+    int status = (int) luxSyscall(SYSCALL_UMOUNT2, (uint64_t) tgt, flags, 0, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    }
+
+    return status;
+}
+
+int umount(const char *tgt) {
+    return umount2(tgt, 0);
+}
+
 int fcntl(int fd, int cmd, ...) {
     va_list args;
     va_start(args, cmd);
