@@ -73,6 +73,8 @@ char *secure_getenv(const char *);
 char *ttyname(int);
 int ttyname_r(int, char *, size_t);
 int isatty(int);
+pid_t tcgetpgrp(int);
+int tcsetpgrp(int, pid_t);
 
 extern char *optarg;
 extern int optind, opterr, optopt;
