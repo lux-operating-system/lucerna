@@ -19,6 +19,9 @@
 #define PTY_GET_LOCAL           (0xB0 | IOCTL_OUT_PARAM)
 #define PTY_GET_CONTROL         (0xC0 | IOCTL_OUT_PARAM)
 
+#define PTY_SET_WINSIZE         (0xD0 | IOCTL_IN_PARAM)
+#define PTY_GET_WINSIZE         (0xE0 | IOCTL_OUT_PARAM)
+
 #define PTY_EOF                 0x04
 #define PTY_EOL                 0xFF
 #define PTY_ERASE               0x7F
@@ -67,5 +70,18 @@ int tcgetattr(int fd, struct termios *termios) {
      * terminal support, but for completion's sake */
     termios->c_ispeed = B38400;
     termios->c_ospeed = B38400;
+    return 0;
+}
+
+int tcsetwinsize(int fd, const struct winsize *ws) {
+    unsigned long winsize = (ws->ws_col << 16) | ws->ws_row;
+    return ioctl(fd, PTY_SET_WINSIZE, winsize);
+}
+
+int tcgetwinsize(int fd, struct winsize *ws) {
+    unsigned long winsize;
+    if(ioctl(fd, PTY_GET_WINSIZE, &winsize) < 0) return -1;
+    ws->ws_row = winsize & 0xFFFF;
+    ws->ws_col = (winsize >> 16) & 0xFFFF;
     return 0;
 }
