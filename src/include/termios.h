@@ -19,6 +19,11 @@ struct termios {
     cc_t c_cc[NCSS];
 };
 
+struct winsize {
+    unsigned short ws_row;
+    unsigned short ws_col;
+};
+
 /* c_cc indexes */
 #define VEOF                0
 #define VEOL                1
@@ -145,3 +150,5 @@ int tcgetattr(int, struct termios *);
 int tcsetattr(int, int, const struct termios *);
 pid_t tcgetsid(int);
 int tcsendbreak(int, int);
+int tcgetwinsize(int, struct winsize *);
+int tcsetwinsize(int, const struct winsize *);
