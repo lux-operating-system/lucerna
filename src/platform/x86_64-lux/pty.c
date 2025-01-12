@@ -20,6 +20,9 @@
 #define PTY_UNLOCK_PT           0x30
 #define PTY_TTY_NAME            (0x40 | IOCTL_OUT_PARAM)
 
+#define PTY_SET_FOREGROUND      (0xF0 | IOCTL_IN_PARAM)
+#define PTY_GET_FOREGROUND      (0x100 | IOCTL_OUT_PARAM)
+
 static char ptyname[128];
 static char ttybuf[128];
 
@@ -119,4 +122,26 @@ int ttyname_r(int fd, char *buf, size_t bufsz) {
 char *ttyname(int fd) {
     if(ttyname_r(fd, ttybuf, 127)) return NULL;
     else return ttybuf;
+}
+
+/* tcgetpgrp(): returns the PID of a terminal's process group
+ * params: fd - file descriptor of the terminal
+ * returns: process group ID
+ */
+
+pid_t tcgetpgrp(int fd) {
+    unsigned long pid;
+    if(ioctl(fd, PTY_GET_FOREGROUND, &pid)) return -1;
+    return (pid_t) pid;
+}
+
+/* tcsetpgrp(): sets the PID of a terminal's process group
+ * params: fd - file descriptor of the terminal
+ * params: pgrp - process group ID
+ * returns: zero on success
+ */
+
+int tcsetpgrp(int fd, pid_t pgrp) {
+    signed long pid = (signed long) pgrp;
+    return ioctl(fd, PTY_SET_FOREGROUND, (unsigned long) pid);
 }
