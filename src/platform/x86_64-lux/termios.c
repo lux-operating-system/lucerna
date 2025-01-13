@@ -22,17 +22,10 @@
 #define PTY_SET_WINSIZE         (0xD0 | IOCTL_IN_PARAM)
 #define PTY_GET_WINSIZE         (0xE0 | IOCTL_OUT_PARAM)
 
-#define PTY_EOF                 0x04
-#define PTY_EOL                 0xFF
-#define PTY_ERASE               0x7F
-#define PTY_INTR                0x03
-#define PTY_KILL                0x15
-#define PTY_MIN                 0x01
-#define PTY_QUIT                0x1C
-#define PTY_START               0x11
-#define PTY_STOP                0x13
-#define PTY_SUSP                0x1A
-#define PTY_TIME                0x00
+#define PTY_SET_NCSS1           (0x110 | IOCTL_IN_PARAM)
+#define PTY_SET_NCSS2           (0x120 | IOCTL_IN_PARAM)
+#define PTY_GET_NCSS1           (0x130 | IOCTL_OUT_PARAM)
+#define PTY_GET_NCSS2           (0x140 | IOCTL_OUT_PARAM)
 
 int tcsetattr(int fd, int options, const struct termios *termios) {
     if(ioctl(fd, PTY_SET_INPUT, termios->c_iflag) < 0) return -1;
@@ -40,7 +33,21 @@ int tcsetattr(int fd, int options, const struct termios *termios) {
     if(ioctl(fd, PTY_SET_LOCAL, termios->c_lflag) < 0) return -1;
     if(ioctl(fd, PTY_SET_CONTROL, termios->c_cflag) < 0) return -1;
 
-    return 0;
+    unsigned long ncss;
+    ncss = termios->c_cc[VEOF] & 0xFF;
+    ncss |= (termios->c_cc[VEOL] & 0xFF) << 8;
+    ncss |= (termios->c_cc[VERASE] & 0xFF) << 16;
+    ncss |= (termios->c_cc[VINTR] & 0xFF) << 24;
+    ncss |= (termios->c_cc[VKILL] & 0xFF) << 32;
+    ncss |= (termios->c_cc[VMIN] & 0xFF) << 40;
+    ncss |= (termios->c_cc[VQUIT] & 0xFF) << 48;
+    ncss |= (termios->c_cc[VSTART] & 0xFF) << 56;
+    if(ioctl(fd, PTY_SET_NCSS1, ncss) < 0) return -1;
+
+    ncss = termios->c_cc[VSTOP] & 0xFF;
+    ncss |= (termios->c_cc[VSUSP] & 0xFF) << 8;
+    ncss |= (termios->c_cc[VTIME] & 0xFF) << 16;
+    return ioctl(fd, PTY_SET_NCSS2, ncss);
 }
 
 int tcgetattr(int fd, struct termios *termios) {
@@ -54,17 +61,20 @@ int tcgetattr(int fd, struct termios *termios) {
     if(ioctl(fd, PTY_GET_CONTROL, &temp) < 0) return -1;
     termios->c_cflag = temp;
 
-    termios->c_cc[VEOF] = PTY_EOF;
-    termios->c_cc[VEOL] = PTY_EOL;
-    termios->c_cc[VERASE] = PTY_ERASE;
-    termios->c_cc[VINTR] = PTY_INTR;
-    termios->c_cc[VKILL] = PTY_KILL;
-    termios->c_cc[VMIN] = PTY_MIN;
-    termios->c_cc[VQUIT] = PTY_QUIT;
-    termios->c_cc[VSTART] = PTY_START;
-    termios->c_cc[VSTOP] = PTY_STOP;
-    termios->c_cc[VSUSP] = PTY_SUSP;
-    termios->c_cc[VTIME] = PTY_TIME;
+    if(ioctl(fd, PTY_GET_NCSS1, &temp) < 0) return -1;
+    termios->c_cc[VEOF] = temp & 0xFF;
+    termios->c_cc[VEOL] = (temp >> 8) & 0xFF;
+    termios->c_cc[VERASE] = (temp >> 16) & 0xFF;
+    termios->c_cc[VINTR] = (temp >> 24) & 0xFF;
+    termios->c_cc[VKILL] = (temp >> 32) & 0xFF;
+    termios->c_cc[VMIN] = (temp >> 40) & 0xFF;
+    termios->c_cc[VQUIT] = (temp >> 48) & 0xFF;
+    termios->c_cc[VSTART] = (temp >> 56) & 0xFF;
+
+    if(ioctl(fd, PTY_GET_NCSS2, &temp) < 0) return -1;
+    termios->c_cc[VSTOP] = temp & 0xFF;
+    termios->c_cc[VSUSP] = (temp >> 8) & 0xFF;
+    termios->c_cc[VTIME] = (temp >> 16) & 0xFF;
 
     /* these don't actually mean anything because there's no real hardware
      * terminal support, but for completion's sake */
