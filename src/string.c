@@ -212,7 +212,7 @@ char *strrchr(const char *s, int c) {
     size_t len = strlen(s);
     if(!len) return NULL;
     if(len == 1) {
-        if(*s == (char) c) return s;
+        if(*s == (char) c) return (char *) s;
         return NULL;
     }
 
