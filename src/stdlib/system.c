@@ -58,12 +58,12 @@ int system(const char *c) {
         /* child */
         execvp(argv[0], argv);
         exit(-1);
-    } else {
-        /* parent */
-        free(command);
-        free(argv);
-        int status;
-        if(waitpid(child, &status, 0) != child) return -1;
-        return status;
     }
+
+    /* parent */
+    free(command);
+    free(argv);
+    int status;
+    if(waitpid(child, &status, 0) != child) return -1;
+    return status;
 }
