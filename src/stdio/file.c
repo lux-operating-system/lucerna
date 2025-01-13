@@ -347,6 +347,10 @@ size_t fread(void *buffer, size_t size, size_t count, FILE *f) {
 
     ssize_t status = read(f->fd, buffer, s);
     if(status > 0) return status / size;
+    else if(!status) {
+        f->eof = 1;
+        return 0;
+    }
 
     f->error = errno;
     return 0;
