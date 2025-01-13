@@ -22,6 +22,7 @@
 #include <sys/stat.h>
 #include <sys/ioctl.h>
 #include <sys/mman.h>
+#include <sys/statvfs.h>
 #include <sys/lux/lux.h>
 #include "syscalls.h"
 
@@ -401,6 +402,26 @@ void rewinddir(DIR *dir) {
 
 int fsync(int fd) {
     int status = (int) luxSyscall(SYSCALL_FSYNC, fd, 0, 0, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    }
+
+    return 0;
+}
+
+int statvfs(const char *path, struct statvfs *buf) {
+    int status = (int) luxSyscall(SYSCALL_STATVFS, (uint64_t) path, (uint64_t) buf, 0, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    }
+
+    return 0;
+}
+
+int fstatvfs(int fd, struct statvfs *buf) {
+    int status = (int) luxSyscall(SYSCALL_FSTATVFS, fd, (uint64_t) buf, 0, 0);
     if(status < 0) {
         errno = -1*status;
         return -1;
