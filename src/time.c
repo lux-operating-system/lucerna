@@ -47,7 +47,7 @@ struct tm *gmtime_r(const time_t *timer, struct tm *result) {
     result->tm_min = (*timer / 60) % 60;
     result->tm_hour = (*timer / 3600) % 24;
     result->tm_yday = (*timer / 86400);     // total number of days, will fix this after calculating
-    result->tm_year = (int) ((double) result->tm_yday / 365.25); // years since 1970, will fix this too
+    result->tm_year = (result->tm_yday * 100) / 36525; // years since 1970, will fix this too
     result->tm_wday = (result->tm_yday + 4) % 7;
 
     // count how many days have passed before the current year in a way
