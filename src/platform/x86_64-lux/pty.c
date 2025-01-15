@@ -41,15 +41,8 @@ int posix_openpt(int flags) {
  */
 
 char *ptsname(int fd) {
-    unsigned long id;
-    if(!ioctl(fd, PTY_GET_SLAVE, &id)) {
-        strcpy(ptyname, "/dev/pts");
-        ltoa(id, &ptyname[8], DECIMAL);
-
-        return ptyname;
-    } else {
-        return NULL;        // errno is already set by ioctl()
-    }
+    if(ptsname_r(fd, ptyname, sizeof(ptyname))) return NULL;
+    return ptyname;
 }
 
 /* ptsname_r(): returns the name of the slave pseudo-terminal in a buffer
@@ -63,17 +56,13 @@ char *ptsname(int fd) {
  */
 
 int ptsname_r(int fd, char *buf, size_t bufsz) {
-    char *pts = ptsname(fd);
-    if(!pts) return errno;
-
-    if(strlen(pts) > bufsz) {
-        memcpy(buf, pts, bufsz-1);
-        buf[bufsz-1] = 0;
-    } else {
-        strcpy(buf, pts);
+    unsigned long id;
+    if(!ioctl(fd, PTY_GET_SLAVE, &id)) {
+        snprintf(buf, bufsz, "/dev/pts%ld", id);
+        return 0;
     }
 
-    return 0;
+    return -1;      // errno set by ioctl()
 }
 
 /* grantpt(): changes the mode and owner of the slave pseudo-terminal
