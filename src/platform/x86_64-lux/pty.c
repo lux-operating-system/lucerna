@@ -57,7 +57,7 @@ char *ptsname(int fd) {
 
 int ptsname_r(int fd, char *buf, size_t bufsz) {
     unsigned long id;
-    if(!ioctl(fd, PTY_GET_secondary, &id)) {
+    if(!ioctl(fd, PTY_GET_SECONDARY, &id)) {
         snprintf(buf, bufsz, "/dev/pts%ld", id);
         return 0;
     }
