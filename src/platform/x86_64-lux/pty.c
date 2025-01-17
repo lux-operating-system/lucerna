@@ -15,7 +15,7 @@
 /* ioctl commands here are specific to the luxOS pty driver and will not work
  * on any other terminal implementation */
 
-#define PTY_GET_SLAVE           (0x10 | IOCTL_OUT_PARAM)
+#define PTY_GET_SECONDARY       (0x10 | IOCTL_OUT_PARAM)
 #define PTY_GRANT_PT            0x20
 #define PTY_UNLOCK_PT           0x30
 #define PTY_TTY_NAME            (0x40 | IOCTL_OUT_PARAM)
@@ -27,17 +27,17 @@ static char ptyname[128];
 static char ttybuf[128];
 
 /* posix_openpt(): creates and opens a new pseudo-terminal
- * params: flags - open flags to be used in the master descriptor
- * returns: file descriptor of the master, -1 on error and errno set
+ * params: flags - open flags to be used in the primary descriptor
+ * returns: file descriptor of the primary, -1 on error and errno set
  */
 
 int posix_openpt(int flags) {
     return open("/dev/ptmx", flags, 0);
 }
 
-/* ptsname(): returns the name of the slave pseudo-terminal
- * params: fd - file descriptor of the master
- * returns: pointer to the slave file name, NULL on error
+/* ptsname(): returns the name of the secondary pseudo-terminal
+ * params: fd - file descriptor of the primary
+ * returns: pointer to the secondary file name, NULL on error
  */
 
 char *ptsname(int fd) {
@@ -45,11 +45,11 @@ char *ptsname(int fd) {
     return ptyname;
 }
 
-/* ptsname_r(): returns the name of the slave pseudo-terminal in a buffer
+/* ptsname_r(): returns the name of the secondary pseudo-terminal in a buffer
  * note: this function is NOT in the POSIX standard, but it is implemented by
  * Linux and OpenBSD and frankly it is quite useful and more secure
  * 
- * params: fd - file descriptor of the master
+ * params: fd - file descriptor of the primary
  * params: buf - destination buffer
  * params: bufsz - buffer size
  * returns: zero on success, error code on error
@@ -57,7 +57,7 @@ char *ptsname(int fd) {
 
 int ptsname_r(int fd, char *buf, size_t bufsz) {
     unsigned long id;
-    if(!ioctl(fd, PTY_GET_SLAVE, &id)) {
+    if(!ioctl(fd, PTY_GET_secondary, &id)) {
         snprintf(buf, bufsz, "/dev/pts%ld", id);
         return 0;
     }
@@ -65,11 +65,11 @@ int ptsname_r(int fd, char *buf, size_t bufsz) {
     return -1;      // errno set by ioctl()
 }
 
-/* grantpt(): changes the mode and owner of the slave pseudo-terminal
+/* grantpt(): changes the mode and owner of the secondary pseudo-terminal
  * the owner will be set to the UID of the caller and the permissions
  * will be set to rw--w----
  *
- * params: fd - file descriptor of the master
+ * params: fd - file descriptor of the primary
  * returns: zero on success, -1 on error and errno set
  */
 
@@ -77,8 +77,8 @@ int grantpt(int fd) {
     return ioctl(fd, PTY_GRANT_PT, 0);
 }
 
-/* unlockpt(): unlocks the slave pseudo-terminal so that can be opened
- * params: fd - file descriptor of the master
+/* unlockpt(): unlocks the secondary pseudo-terminal so that can be opened
+ * params: fd - file descriptor of the primary
  * returns: zero on success, -1 on error and errno set
  */
 
@@ -87,7 +87,7 @@ int unlockpt(int fd) {
 }
 
 /* ttyname_r(): thread-safe function to return the name of a tty
- * params: fd - file descriptor of the slave
+ * params: fd - file descriptor of the secondary
  * params: buf - buffer to store file name
  * params: bufsz - buffer size
  * returns: zero on success
@@ -104,8 +104,8 @@ int ttyname_r(int fd, char *buf, size_t bufsz) {
 }
 
 /* ttyname(): non-thread-safe version of ttyname_r()
- * params: fd - file descriptor of the slave
- * returns: pointer to slave path, NULL on error
+ * params: fd - file descriptor of the secondary
+ * returns: pointer to secondary path, NULL on error
  */
 
 char *ttyname(int fd) {
