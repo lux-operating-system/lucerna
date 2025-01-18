@@ -42,6 +42,8 @@ pid_t getpid(void);
 pid_t gettid(void);
 uid_t getuid(void);
 uid_t getgid(void);
+pid_t getpgrp(void);
+pid_t setpgrp(void);
 int close(int);
 ssize_t read(int, void *, size_t);
 ssize_t write(int, const void *, size_t);
