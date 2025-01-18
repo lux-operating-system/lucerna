@@ -98,6 +98,14 @@ int gettimeofday(struct timeval *tz, void *tzp) {
     return (int) luxSyscall(SYSCALL_GETTIMEOFDAY, (uint64_t) tz, (uint64_t) tzp, 0, 0);
 }
 
+pid_t getpgrp(void) {
+    return (pid_t) luxSyscall(SYSCALL_GETPGRP, 0, 0, 0, 0);
+}
+
+pid_t setpgrp(void) {
+    return (pid_t) luxSyscall(SYSCALL_SETPGRP, 0, 0, 0, 0);
+}
+
 /* Group 2: File System Manipulation */
 
 int open(const char *path, int flags, ...) {
@@ -532,6 +540,10 @@ void (*signal(int sig, void (*func)(int)))(int) {
 
     if(status) return SIG_ERR;
     else return oact.sa_handler;
+}
+
+int sigprocmask(int how, const sigset_t *set, sigset_t *oldset) {
+    return 0;   /* TODO */
 }
 
 /* Group 4: Memory Management */
