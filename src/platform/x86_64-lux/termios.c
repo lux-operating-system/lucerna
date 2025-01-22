@@ -95,3 +95,7 @@ int tcgetwinsize(int fd, struct winsize *ws) {
     ws->ws_col = (winsize >> 16) & 0xFFFF;
     return 0;
 }
+
+int tcflush(int fd, int queue) {
+    return 0;
+}
