@@ -3,9 +3,8 @@
  * Omar Elghoul, 2024
  */
 
-#include <stdlib.h>
+#include <signal.h>
 
 void abort(void) {
-    // TODO: reimplement a proper abort() after implementing signals
-    exit(-1);
+    raise(SIGABRT);
 }
