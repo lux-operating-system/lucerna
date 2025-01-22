@@ -543,7 +543,13 @@ void (*signal(int sig, void (*func)(int)))(int) {
 }
 
 int sigprocmask(int how, const sigset_t *set, sigset_t *oldset) {
-    return 0;   /* TODO */
+    int status = luxSyscall(SYSCALL_SIGPROCMASK, how, (uint64_t) set, (uint64_t) oldset, 0);
+    if(status < 0) {
+        errno = -1*status;
+        return -1;
+    }
+
+    return status;
 }
 
 /* Group 4: Memory Management */
