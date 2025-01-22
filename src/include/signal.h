@@ -68,9 +68,9 @@
 #define SIGSTKSZ        16384
 
 /* Signal Masking */
-#define SIG_BLOCK       1
-#define SIG_SETMASK     2
-#define SIG_UNBLOCK     3
+#define SIG_BLOCK       0x0001
+#define SIG_UNBLOCK     0x0002
+#define SIG_SETMASK     0x0003
 
 typedef volatile uint32_t sig_atomic_t;
 typedef uint64_t sigset_t;
