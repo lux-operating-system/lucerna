@@ -7,38 +7,6 @@
 #include <stddef.h>
 #include <string.h>
 
-int ffs(int i) {
-    int index = 0;
-    while(i) {
-        if(i & 1)
-            return index+1;
-        index++;
-        i >>= 1;
-    }
-
-    return 0;
-}
-
-int bcmp(const void *s1, const void *s2, size_t n) {
-    return memcmp(s1, s2, n);
-}
-
-void bcopy(const void *s1, void *s2, size_t n) {
-    memmove(s2, s1, n);
-}
-
-void bzero(void *s, size_t n) {
-    memset(s, 0, n);
-}
-
-char *index(const char *s, int c) {
-    return strchr(s, c);
-}
-
-char *rindex(const char *s, int c) {
-    return strrchr(s, c);
-}
-
 int strncasecmp(const char *s1, const char *s2, size_t n) {
     if(!n) return 0;
 
