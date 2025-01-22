@@ -560,7 +560,13 @@ struct MmapSyscallParams {
 };
 
 void *sbrk(intptr_t delta) {
-    return (void *)luxSyscall(SYSCALL_SBRK, (uint64_t)delta, 0, 0, 0);
+    intptr_t status = (intptr_t) luxSyscall(SYSCALL_SBRK, (uint64_t)delta, 0, 0, 0);
+    if(status < 0) {
+        errno = -1 * status;
+        return (void *) -1;
+    }
+
+    return (void *) status;
 }
 
 void *mmap(void *addr, size_t len, int prot, int flags, int fd, off_t off) {
